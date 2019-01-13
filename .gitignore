@@ -1,1 +1,3 @@
 venv/
+server/__/pycache__/
+server/config.py
