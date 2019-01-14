@@ -18,31 +18,46 @@ def main():
 
 @app.route("/insertrecord", methods=['POST'])
 def insertRecord():
-	_tab = request.form['table']
-	_m = request.form['month']
-	_d = request.form['day']
-	_t = request.form['title']
-	_a = request.form['artist']
-	_r = request.form['relyear']
+    _tab = request.form['table']
+    _m = request.form['month']
+    _d = request.form['day']
+    _t = request.form['title']
+    _a = request.form['artist']
+    _r = request.form['relyear']
 
-	if _tab and _m and _d and _t and _a and _r:
-		conn = mysql.connect()
-		cursor = conn.cursor()
-		cursor.callproc('insertRecord', (_tab, _m, _d, _t, _a, _r))
-		
-		data = cursor.fetchall()
-		
-		if len(data) is 0:
-			conn.commit()
-			return json.dumps({'message' : 'record successfully inserted'})
-		else:
-			return json.dumps({'error' : str(data[0])})
-	else:
-		return json.dumps({'error': 'error with inputted info'})
+    if _tab and _m and _d and _t and _a and _r:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.callproc('insertRecord', (_tab, _m, _d, _t, _a, _r))
+
+        data = cursor.fetchall()
+
+        if len(data) is 0:
+            conn.commit()
+            return json.dumps({'message' : 'record successfully inserted'})
+        else:
+            return json.dumps({'error' : str(data[0])})
+    else:
+        return json.dumps({'error': 'error with inputted info'})
+
+
+# @app.route("showrecords", methods=['GET'])
+# def showRecords():
+#     _tab = request.form['table']
+#     if _tab:
+#         conn = mysql.connect()
+#         cursor = conn.cursor()
+#         cursor.callproc('showrecords', (_tab,))
+#
+#         data = cursor.fetchall()
+#         if len(data) is 0:
+# 			conn.commit()
+# 			return json.dumps({'message' : 'successfully called'})
+#         else:
+# 			return json.dumps({'error' : str(data[0])})
+
 
 
 if __name__ == "__main__":
         app.debug = True
         app.run()
-
-
