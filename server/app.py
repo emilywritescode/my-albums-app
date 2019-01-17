@@ -13,8 +13,11 @@ mysql.init_app(app)
 
 @app.route("/")
 def main():
-        return render_template('index.html')
+    return render_template('index.html')
 
+@app.route("/insert")
+def insertpage():
+    return render_template('insert.html')
 
 @app.route("/insertrecord", methods=['POST'])
 def insertRecord():
@@ -40,8 +43,12 @@ def insertRecord():
     else:
         return json.dumps({'error': 'error with inputted info'})
 
+@app.route("/select")
+def selectpage():
+    return render_template('select.html')
 
-# @app.route("showrecords", methods=['GET'])
+
+# @app.route("/showrecords", methods=['GET'])
 # def showRecords():
 #     _tab = request.form['table']
 #     if _tab:
