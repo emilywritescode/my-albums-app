@@ -48,20 +48,22 @@ def selectpage():
     return render_template('select.html')
 
 
-# @app.route("/showrecords", methods=['GET'])
-# def showRecords():
-#     _tab = request.form['table']
-#     if _tab:
-#         conn = mysql.connect()
-#         cursor = conn.cursor()
-#         cursor.callproc('showrecords', (_tab,))
-#
-#         data = cursor.fetchall()
-#         if len(data) is 0:
-# 			conn.commit()
-# 			return json.dumps({'message' : 'successfully called'})
-#         else:
-# 			return json.dumps({'error' : str(data[0])})
+@app.route("/showrecords", methods=['POST'])
+def showRecords():
+    _tab = request.form['table']
+    if _tab:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.callproc('selectrecords', (_tab,))
+        data = cursor.fetchall()
+
+        if len(data) is 0:
+            return json.dumps({'error' : 'something happened: ' + str(data[0])})
+        else:
+            conn.commit()
+            return json.dumps({'message' : 'successfully called'})
+    else:
+        return json.dumps({'error' : 'no table selected or error selecting table'})
 
 
 
