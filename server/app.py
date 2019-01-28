@@ -58,12 +58,12 @@ def showRecords():
         data = cursor.fetchall()
 
         if len(data) is 0:
-            return json.dumps({'error' : 'something happened: ' + str(data[0])})
+            return render_template('error.html', error_msg = 'something happened: ' + str(data[0]))
         else:
             conn.commit()
-            return json.dumps({'message' : 'successfully called'})
+            return render_template('table_results.html', selected_table = _tab, results = res_dict)
     else:
-        return json.dumps({'error' : 'no table selected or error selecting table'})
+        return render_template('error.html', error_msg = 'no table selected or error selecting table')
 
 
 
