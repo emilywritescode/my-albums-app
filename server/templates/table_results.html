@@ -32,16 +32,28 @@
         <h1 class="text-center">{{selected_table}}</h1>
     </div>
 
-    <table>
-    {% for x in results %}
-        <tr>
-            <td>{{x.Month}} {{x.Day}}</td>
-            <td>{{x.Album}}</td>
-            <td>{{x.Artist}}</td>
-            <td>{{x.Release_Year}}</td>
-        </tr>
-    {% endfor %}
-    </table>
+    <div class="container text-center">
+        <table class="table table-sm">
+            <thead class="thead-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Release Year</th>
+                    </tr>
+            </thead>
+            <tbody>
+                {% for x in results %}
+                <tr>
+                    <td>{{x.Month}} {{x.Day}}</td>
+                    <td>{{x.Album}}</td>
+                    <td>{{x.Artist}}</td>
+                    <td>{{x.Release_Year}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </body>
 
