@@ -13,18 +13,35 @@
 </head>
 
 <body>
+
+    <!-- navbar -->
+    <ul class="nav justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/insert">Insert</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/select">Select</a>
+      </li>
+    </ul>
+
+
     <div class="jumbotron jumbotron-fluid">
-        <h1>{{selected_table}}</h1>
+        <h1 class="text-center">{{selected_table}}</h1>
     </div>
 
-    {% for row in x %}
+    <table>
+    {% for x in results %}
         <tr>
-            <td>month day</td>
-            <td>album</td>
-            <td>artist</td>
-            <td>release year</td>
+            <td>{{x.Month}} {{x.Day}}</td>
+            <td>{{x.Album}}</td>
+            <td>{{x.Artist}}</td>
+            <td>{{x.Release_Year}}</td>
         </tr>
     {% endfor %}
+    </table>
 
 </body>
 
