@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, json
 from flaskext.mysql import MySQL
 import config
 
+import calendar
+
 app = Flask(__name__)
 
 mysql = MySQL()
@@ -58,12 +60,22 @@ def showRecords():
         data = cursor.fetchall()
 
         if len(data) is 0:
-            return json.dumps({'error' : 'something happened: ' + str(data[0])})
+            return render_template('error.html', error_msg = 'something happened: ' + str(data[0]))
         else:
             conn.commit()
-            return json.dumps({'message' : 'successfully called'})
+            res_dict = []
+            for row in data:
+                row_dict = {
+                    'Month' : calendar.month_name[row[0]],
+                    'Day' : row[1],
+                    'Album' : row[2],
+                    'Artist' : row[3],
+                    'Release_Year' : row[4]
+                }
+                res_dict.append(row_dict)
+            return render_template('table_results.html', selected_table = _tab, results = res_dict)
     else:
-        return json.dumps({'error' : 'no table selected or error selecting table'})
+        return render_template('error.html', error_msg = 'no table selected or error selecting table')
 
 
 
