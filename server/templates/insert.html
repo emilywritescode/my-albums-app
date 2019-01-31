@@ -26,8 +26,18 @@
       </li>
     </ul>
 
+
+    {% if success_msg %}
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><p>{{success_msg}}</p>
+    </div>
+    {% endif %}
+
+
     <div class="jumbotron jumbotron-fluid">
-        <h1>Insert <small class="text-muted">a record into the database</small></h1>
+        <h1 class="text-center">Insert <small class="text-muted">a record into the database</small></h1>
+    </div>
+    <div class="container">
         <form id="insertform" action="/insertrecord" method="post">
             <label for="table">Table</label>
             <select class="form-control" name="table">
@@ -35,16 +45,17 @@
                 <option value="albums_2018">2018</option>
             </select><br><br>
             <label for="month">Month</label>
-            <input name="month"></input><br><br>
+            <input name="month" required></input><br><br>
             <label for="day">Day</label>
-            <input name="day"></input><br><br>
+            <input name="day" required></input><br><br>
             <label for="title">Title</title>
-            <input name="title"></input><br><br>
+            <input name="title" required></input><br><br>
             <label for="artist">Artist</title>
-            <input name="artist"></input><br><br>
+            <input name="artist" required></input><br><br>
             <label for="relyear">Release Year</title>
-            <input name="relyear"></input><br><br>
+            <input name="relyear" required></input><br><br>
             <input type="submit"></input>
+            <input type="reset"></input>
         </form>
     </div>
 </body>
