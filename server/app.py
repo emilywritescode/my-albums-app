@@ -91,6 +91,9 @@ def showRecords():
     else:
         return render_template('error.html', error_msg = "some error occurred while selecting table")
 
+@app.route("/albuminfo/<album>")
+def getAlbum(album):
+    return render_template('albuminfo.html', album_name = album)
 
 
 if __name__ == "__main__":

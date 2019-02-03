@@ -20,7 +20,7 @@
         <a class="nav-link" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" href="/insert">Insert</a>
+        <a class="nav-link" href="/insert">Insert</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/select">Select</a>
@@ -46,7 +46,7 @@
                 {% for x in results %}
                 <tr>
                     <td>{{x.Month}} {{x.Day}}</td>
-                    <td>{{x.Album}}</td>
+                    <td><a href="{{ url_for ('getAlbum', album = x.Album) }}">{{x.Album}}</a></td>
                     <td>{{x.Artist}}</td>
                     <td>{{x.Release_Year}}</td>
                 </tr>
