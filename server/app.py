@@ -23,27 +23,33 @@ def insertpage():
 
 @app.route("/insertrecord", methods=['POST'])
 def insertRecord():
-    _tab = request.form['table']
-    _m = request.form['month']
-    _d = request.form['day']
-    _t = request.form['title']
-    _a = request.form['artist']
-    _r = request.form['relyear']
+    try:
+        _tab = request.form['table']
+        _m = request.form['month']
+        _d = request.form['day']
+        _t = request.form['title']
+        _a = request.form['artist']
+        _r = request.form['relyear']
+    except Exception:
+        return render_template('error.html', error_msg = "form data not submitted properly")
 
     if _tab and _m and _d and _t and _a and _r:
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.callproc('insertRecord', (_tab, _m, _d, _t, _a, _r))
+        try:
+            cursor.callproc('insertRecord', (_tab, _m, _d, _t, _a, _r))
+        except Exception as e:
+            return render_template('error.html', error_msg= str(e))
 
         data = cursor.fetchall()
 
         if len(data) is 0:
             conn.commit()
-            return json.dumps({'message' : 'record successfully inserted'})
+            return render_template('insert.html', success_msg="Nice tunes! Record successfully entered!")
         else:
-            return json.dumps({'error' : str(data[0])})
+            return render_template('error.html', error_msg= "no data was returned")
     else:
-        return json.dumps({'error': 'error with inputted info'})
+        return render_template('error.html', error_msg= "one or more form fields not filled out")
 
 @app.route("/select")
 def selectpage():
@@ -52,11 +58,19 @@ def selectpage():
 
 @app.route("/showrecords", methods=['POST'])
 def showRecords():
-    _tab = request.form['table']
+    try:
+        _tab = request.form['table']
+    except Exception:
+        return render_template('error.html', error_msg = "you didn't select a table")
+
     if _tab:
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.callproc('selectrecords', (_tab,))
+        try:
+            cursor.callproc('selectrecords', (_tab,))
+        except Exception as e:
+            return render_template('error.html', error_msg=str(e))
+
         data = cursor.fetchall()
 
         if len(data) is 0:
@@ -75,7 +89,7 @@ def showRecords():
                 res_dict.append(row_dict)
             return render_template('table_results.html', selected_table = _tab, results = res_dict)
     else:
-        return render_template('error.html', error_msg = 'no table selected or error selecting table')
+        return render_template('error.html', error_msg = "some error occurred while selecting table")
 
 
 
