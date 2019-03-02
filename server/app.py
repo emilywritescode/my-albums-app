@@ -1,5 +1,11 @@
+import requests
+
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
 from flask import Flask, render_template, request, json
 from flaskext.mysql import MySQL
+
 import config
 
 import calendar
@@ -92,9 +98,24 @@ def showRecords():
         return render_template('error.html', error_msg = "some error occurred while selecting table")
 
 
-@app.route("/album/<path:album>")
-def getAlbum(album):
-    return render_template('album_info.html', album_name = album)
+@app.route("/album/<path:album>/<path:artist>")
+def getAlbum(album, artist):
+    search_results = spotify_search_album(album, artist)
+    try:
+        sp_album_cover = search_results['albums']['items'][0]['images'][0]['url']
+    except:
+        search_results = spotify_search_album(album_slice(album), artist)
+    return render_template('album_info.html', album_name = album, artist_name = artist, album_cover = sp_album_cover)
+
+
+def spotify_search_album(album, artist):
+    client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIPY_CLIENT_ID, client_secret=config.SPOTIPY_CLIENT_SECRET)
+    sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
+    res = sp.search(q = 'album:' + album + ' artist:' + artist, limit=1, type = 'album', market = 'US')
+
+    return res
+
+def album_slice(album):
 
 
 if __name__ == "__main__":
