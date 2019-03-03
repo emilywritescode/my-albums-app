@@ -101,11 +101,21 @@ def showRecords():
 @app.route("/album/<path:album>/<path:artist>")
 def getAlbum(album, artist):
     search_results = spotify_search_album(album, artist)
+
+    #get album cover
     try:
         sp_album_cover = search_results['albums']['items'][0]['images'][0]['url']
     except:
         search_results = spotify_search_album(album_slice(album), artist)
-    return render_template('album_info.html', album_name = album, artist_name = artist, album_cover = sp_album_cover)
+        sp_album_cover = search_results['albums']['items'][0]['images'][0]['url']
+
+    #get album Spotify URL for play embed
+    sp_album_uri = search_results['albums']['items'][0]['uri']
+    sp_album_embed = "https://open.spotify.com/embed/album/" + sp_album_uri[sp_album_uri.rfind(':')+1:]
+
+    print(sp_album_embed)
+
+    return render_template('album_info.html', album_name = album, artist_name = artist, album_cover_SP = sp_album_cover, album_play_SP = sp_album_embed)
 
 
 def spotify_search_album(album, artist):
@@ -116,7 +126,7 @@ def spotify_search_album(album, artist):
     return res
 
 def album_slice(album):
-
+    return album[:album.index('(')]
 
 if __name__ == "__main__":
         app.debug = True
