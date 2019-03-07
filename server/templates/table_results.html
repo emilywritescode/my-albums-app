@@ -13,7 +13,6 @@
 </head>
 
 <body>
-
     <!-- navbar -->
     <ul class="nav nav-pills justify-content-center">
       <li class="nav-item">
@@ -46,7 +45,7 @@
                 {% for x in results %}
                 <tr>
                     <td>{{x.Month}} {{x.Day}}</td>
-                    <td><a href="{{ url_for ('getAlbum', album = x.Album, artist = x.Artist) }}"><i>{{x.Album}}</i></a></td>
+                    <td><a href="{{ url_for ('getAlbum', album = x.Album, artist = x.Artist)}}"><i>{{x.Album}}</i></a></td>
                     <td>{{x.Artist}}</td>
                     <td>{{x.Release_Year}}</td>
                 </tr>
@@ -54,7 +53,6 @@
             </tbody>
         </table>
     </div>
-
 </body>
 
 <footer>

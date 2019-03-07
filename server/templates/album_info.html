@@ -30,14 +30,14 @@
 
     <div class="jumbotron jumbotron-fluid text-center">
         <h1><i>{{album_name}}</i></h1>
-        <p>{{artist_name}}</p>
+        <p><a href="/artist/{{artist_name}}">{{artist_name}}</a></p>
         <!-- album cover art -->
         <img id="album_cover" src="{{album_cover_SP}}" height="250" width="250">
         <!-- album Spotify playlist -->
         {% if album_play_SP %}
-        <br>
-        <br>
-        <iframe src={{album_play_SP}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <br>
+            <br>
+            <iframe src={{album_play_SP}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         {% endif %}
     </div>
 
