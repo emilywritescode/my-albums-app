@@ -1,5 +1,11 @@
+import requests
+
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
 from flask import Flask, render_template, request, json
 from flaskext.mysql import MySQL
+
 import config
 
 import calendar
@@ -91,10 +97,64 @@ def showRecords():
     else:
         return render_template('error.html', error_msg = "some error occurred while selecting table")
 
-@app.route("/albuminfo/<album>")
-def getAlbum(album):
-    return render_template('albuminfo.html', album_name = album)
 
+@app.route("/album/<path:album>/<path:artist>")
+def getAlbum(album, artist):
+    # try Spotify search
+    sp_search_results = spotify_search_album(album, artist)
+
+    if sp_search_results['albums']['total'] == 0:
+        # splice album title and try Spotify search again
+        sp_search_results = spotify_search_album(album_slice(album), artist)
+
+    # get album cover
+    sp_album_cover = sp_search_results['albums']['items'][0]['images'][0]['url']
+
+    #get album Spotify URL for play embed
+    sp_album_uri = sp_search_results['albums']['items'][0]['uri']
+    sp_album_embed = "https://open.spotify.com/embed/album/" + sp_album_uri[sp_album_uri.rfind(':')+1:]
+
+
+    # try Last.fm search
+    # lfm_search_results = lfm_search_album(album, artist)
+
+    # try Wikipedia search
+    # wp_search_results = wp_search_album(album, artist)
+
+
+    return render_template('album_info.html', album_name = album, artist_name = artist, album_cover_SP = sp_album_cover, album_play_SP = sp_album_embed)
+
+
+def spotify_search_album(album, artist):
+    client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIPY_CLIENT_ID, client_secret=config.SPOTIPY_CLIENT_SECRET)
+    sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
+    res = sp.search(q = 'album:' + album + ' artist:' + artist, limit=1, type = 'album', market = 'US')
+
+    return res
+
+# def lfm_search_album(album, artist):
+#     pass
+#
+# def wp_search_album(album, artist):
+#     pass
+
+def album_slice(album):
+    return album[:album.index('(')]
+
+@app.route("/artist/<path:artist>")
+def getArtist(artist):
+    # try Spotify search
+    sp_artist_results = spotify_search_artist(artist)
+    # try Last.fm search
+
+    # try Google search
+    return render_template('artist_info.html', artist_name = artist, res = sp_artist_results)
+
+def spotify_search_artist(artist):
+     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIPY_CLIENT_ID, client_secret=config.SPOTIPY_CLIENT_SECRET)
+     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
+     res = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
+     return res
 
 if __name__ == "__main__":
         app.debug = True
