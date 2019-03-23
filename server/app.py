@@ -20,14 +20,6 @@ app.config['MYSQL_DATABASE_DB'] = config.mysqldb
 mysql.init_app(app)
 
 
-# @app.route("/")
-# def main():
-#     return render_template('index.html')
-#
-# @app.route("/insert")
-# def insertpage():
-#     return render_template('insert.html')
-
 @app.route("/insertrecord", methods=['POST'])
 def insertRecord():
     try:
@@ -58,16 +50,38 @@ def insertRecord():
     else:
         return render_template('error.html', error_msg= "one or more form fields not filled out")
 
-# @app.route("/select")
-# def selectpage():
-#     return render_template('select.html')
+@app.route('/api/showtables', methods=['GET'])
+def showTables():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    try:
+        cursor.callproc('showTables',)
+    except Exception as e:
+        return make_response(str(e), 404)
+
+    data = cursor.fetchall()
+
+    if len(data) is 0:
+        return make_response("not found", 404)
+    else:
+        conn.commit()
+        res_dict = []
+        for row in data:
+            row_dict = {
+                'Name' : row[0],
+                'NumAlbums' : row[1],
+                'Year': str(row[0])[-4:]
+            }
+            res_dict.append(row_dict)
+        return jsonify(res_dict)
+
 
 @app.route("/api/showrecords/<table>", methods=['GET'])
 def showRecords(table):
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.callproc('selectrecords', (table,))
+        cursor.callproc('selectRecords', (table,))
     except Exception as e:
         return make_response(str(e), 404)
 

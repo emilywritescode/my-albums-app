@@ -9,6 +9,12 @@ export interface Album {
     Release_Year: number;
 }
 
+export interface Table {
+    Name: string;
+    NumAlbums: number;
+    Year: number;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -17,6 +23,9 @@ export class AlbumsService {
         public http: HttpClient
     ) { }
 
+    showTables() {
+        return this.http.get<Table[]>('/api/showtables');
+    }
     getAlbums(table: string) {
         return this.http.get<Album[]>('/api/showrecords/' + table);
     }
