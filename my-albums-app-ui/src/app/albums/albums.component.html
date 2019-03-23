@@ -1,0 +1,25 @@
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">{{table}}</h1>
+        <p class="lead">Here are all the albums I listened to this year!</p>
+    </div>
+</div>
+
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>Month</th>
+            <th>Day</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Release Year</th>
+        </tr>
+        <tr *ngFor="let album of albums">
+            <td>{{ album.Month }}</td>
+            <td>{{ album.Day }}</td>
+            <td>{{ album.Album }}</td>
+            <td>{{ album.Artist }}</td>
+            <td>{{ album.Release_Year }}</td>
+        </tr>
+    </table>
+</div>
