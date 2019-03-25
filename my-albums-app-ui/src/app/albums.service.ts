@@ -15,6 +15,11 @@ export interface Table {
     Year: number;
 }
 
+export interface AlbumDetails {
+    CoverArt: string;
+    SpotifyPlayer: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -28,5 +33,8 @@ export class AlbumsService {
     }
     getAlbums(table: string) {
         return this.http.get<Album[]>('/api/showrecords/' + table);
+    }
+    getAlbum(album: string, artist: string){
+        return this.http.get<AlbumDetails>('/api/getalbum/' + album + '/' + artist);
     }
 }

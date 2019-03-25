@@ -1,0 +1,16 @@
+<div class="jumbotron jumbotron-fluid text-center">
+    <h1><i>{{title}}</i></h1>
+    <p>{{artist}}</p>
+
+    <div *ngFor="let x of details">
+        <!-- album cover art -->
+        <div *ngIf="x.CoverArt">
+            <img id="album_cover" src="{{x.CoverArt}}" height="250" width="250">
+        </div>
+
+        <!-- album Spotify playlist -->
+        <!-- <div *ngIf="x.SpotifyPlayer">
+            <iframe src={{x.SpotifyPlayer}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </div> -->
+    </div>
+</div>

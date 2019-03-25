@@ -103,7 +103,7 @@ def showRecords(table):
             res_dict.append(row_dict)
         return jsonify(res_dict)
 
-@app.route("/album/<path:album>/<path:artist>")
+@app.route("/api/getalbum/<path:album>/<path:artist>")
 def getAlbum(album, artist):
     # try Spotify search
     sp_search_results = spotify_search_album(album, artist)
@@ -119,15 +119,18 @@ def getAlbum(album, artist):
     sp_album_uri = sp_search_results['albums']['items'][0]['uri']
     sp_album_embed = "https://open.spotify.com/embed/album/" + sp_album_uri[sp_album_uri.rfind(':')+1:]
 
-
     # try Last.fm search
     # lfm_search_results = lfm_search_album(album, artist)
 
     # try Wikipedia search
     # wp_search_results = wp_search_album(album, artist)
 
+    res_dict = [{
+        'CoverArt' : sp_album_cover,
+        'SpotifyPlayer' : sp_album_embed
+    }]
 
-    return render_template('album_info.html', album_name = album, artist_name = artist, album_cover_SP = sp_album_cover, album_play_SP = sp_album_embed)
+    return jsonify(res_dict)
 
 
 def spotify_search_album(album, artist):
