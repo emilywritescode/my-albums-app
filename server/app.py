@@ -3,7 +3,8 @@ import requests
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from flask import Flask, render_template, request, json
+from flask import Flask, render_template, request, json, make_response, jsonify
+
 from flaskext.mysql import MySQL
 
 import config
@@ -18,14 +19,6 @@ app.config['MYSQL_DATABASE_PASSWORD'] = config.mysqlpass
 app.config['MYSQL_DATABASE_DB'] = config.mysqldb
 mysql.init_app(app)
 
-
-@app.route("/")
-def main():
-    return render_template('index.html')
-
-@app.route("/insert")
-def insertpage():
-    return render_template('insert.html')
 
 @app.route("/insertrecord", methods=['POST'])
 def insertRecord():
@@ -57,48 +50,60 @@ def insertRecord():
     else:
         return render_template('error.html', error_msg= "one or more form fields not filled out")
 
-@app.route("/select")
-def selectpage():
-    return render_template('select.html')
-
-
-@app.route("/showrecords", methods=['POST'])
-def showRecords():
+@app.route('/api/showtables', methods=['GET'])
+def showTables():
+    conn = mysql.connect()
+    cursor = conn.cursor()
     try:
-        _tab = request.form['table']
-    except Exception:
-        return render_template('error.html', error_msg = "you didn't select a table")
+        cursor.callproc('showTables',)
+    except Exception as e:
+        return make_response(str(e), 404)
 
-    if _tab:
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        try:
-            cursor.callproc('selectrecords', (_tab,))
-        except Exception as e:
-            return render_template('error.html', error_msg=str(e))
+    data = cursor.fetchall()
 
-        data = cursor.fetchall()
-
-        if len(data) is 0:
-            return render_template('error.html', error_msg = 'something happened: ' + str(data[0]))
-        else:
-            conn.commit()
-            res_dict = []
-            for row in data:
-                row_dict = {
-                    'Month' : calendar.month_name[row[0]],
-                    'Day' : row[1],
-                    'Album' : row[2],
-                    'Artist' : row[3],
-                    'Release_Year' : row[4]
-                }
-                res_dict.append(row_dict)
-            return render_template('table_results.html', selected_table = _tab, results = res_dict)
+    if len(data) is 0:
+        return make_response("not found", 404)
     else:
-        return render_template('error.html', error_msg = "some error occurred while selecting table")
+        conn.commit()
+        res_dict = []
+        for row in data:
+            row_dict = {
+                'Name' : row[0],
+                'NumAlbums' : row[1],
+                'Year': str(row[0])[-4:]
+            }
+            res_dict.append(row_dict)
+        return jsonify(res_dict)
 
 
-@app.route("/album/<path:album>/<path:artist>")
+@app.route("/api/showrecords/<table>", methods=['GET'])
+def showRecords(table):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    try:
+        cursor.callproc('selectRecords', (table,))
+    except Exception as e:
+        return make_response(str(e), 404)
+
+    data = cursor.fetchall()
+
+    if len(data) is 0:
+        return make_response("not found", 404)
+    else:
+        conn.commit()
+        res_dict = []
+        for row in data:
+            row_dict = {
+                'Month' : calendar.month_name[row[0]],
+                'Day' : row[1],
+                'Album' : row[2],
+                'Artist' : row[3],
+                'Release_Year' : row[4]
+            }
+            res_dict.append(row_dict)
+        return jsonify(res_dict)
+
+@app.route("/api/getalbum/<path:album>/<path:artist>")
 def getAlbum(album, artist):
     # try Spotify search
     sp_search_results = spotify_search_album(album, artist)
@@ -114,15 +119,18 @@ def getAlbum(album, artist):
     sp_album_uri = sp_search_results['albums']['items'][0]['uri']
     sp_album_embed = "https://open.spotify.com/embed/album/" + sp_album_uri[sp_album_uri.rfind(':')+1:]
 
-
     # try Last.fm search
     # lfm_search_results = lfm_search_album(album, artist)
 
     # try Wikipedia search
     # wp_search_results = wp_search_album(album, artist)
 
+    res_dict = [{
+        'CoverArt' : sp_album_cover,
+        'SpotifyPlayer' : sp_album_embed
+    }]
 
-    return render_template('album_info.html', album_name = album, artist_name = artist, album_cover_SP = sp_album_cover, album_play_SP = sp_album_embed)
+    return jsonify(res_dict)
 
 
 def spotify_search_album(album, artist):
@@ -151,11 +159,10 @@ def getArtist(artist):
     return render_template('artist_info.html', artist_name = artist, res = sp_artist_results)
 
 def spotify_search_artist(artist):
-     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIPY_CLIENT_ID, client_secret=config.SPOTIPY_CLIENT_SECRET)
-     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
-     res = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
-     return res
+    client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIPY_CLIENT_ID, client_secret=config.SPOTIPY_CLIENT_SECRET)
+    sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
+    res = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
+    return res
 
 if __name__ == "__main__":
-        app.debug = True
-        app.run()
+    app.run(debug=True, port=8080)
