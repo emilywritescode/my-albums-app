@@ -18,6 +18,7 @@ export interface Table {
 export interface AlbumDetails {
     CoverArt: string;
     SpotifyPlayer: string;
+    Summary: string;
 }
 
 @Injectable({
