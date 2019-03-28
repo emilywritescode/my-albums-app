@@ -128,13 +128,16 @@ def getAlbum(album, artist):
     lfm_summary = lfm_search_album(album, artist)
 
     # try Wikipedia search
-    # wp_search_results = wp_search_album(album, artist)
+    wp_summary = wp_search_album(album, artist)
 
     res_dict = [{
         'CoverArt' : sp_album_cover,
         'SpotifyPlayer' : sp_album_embed,
-        'Summary': lfm_summary
+        'LFM_Summary': lfm_summary,
+        'WP_Summary': wp_summary
     }]
+    print(res_dict)
+
 
     return jsonify(res_dict)
 
@@ -154,26 +157,40 @@ def lfm_search_album(album, artist):
 
     return res
 
-# def wp_search_album(album, artist):
-#     pass
+def wp_search_album(album, artist):
+    pass
 
 def album_slice(album):
     return album[:album.index('(')]
 
-@app.route("/artist/<path:artist>")
+@app.route("/api/getartist/<path:artist>", methods=['GET'])
 def getArtist(artist):
     # try Spotify search
     sp_artist_results = spotify_search_artist(artist)
-    # try Last.fm search
+    print ("THIS IS COOL!!\n")
+    print(sp_artist_results)
 
-    # try Google search
-    return render_template('artist_info.html', artist_name = artist, res = sp_artist_results)
+    res_dict = {
+        'Spotify' : {
+            'Followers': sp_artist_results['artists']['items'][0]['followers']['total'],
+            'Genres': sp_artist_results['artists']['items'][0]['genres'],
+            'Image': sp_artist_results['artists']['items'][0]['images'][0]['url']
+        }
+    }
+
+    return jsonify(res_dict)
 
 def spotify_search_artist(artist):
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
     res = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     return res
+
+def google_kg_search_artist(artist):
+
+    "https://kgsearch.googleapis.com/v1/entities:search?query="
+"your_query&parameters"
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

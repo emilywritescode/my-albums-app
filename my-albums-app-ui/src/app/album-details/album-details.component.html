@@ -1,18 +1,19 @@
 <div class="jumbotron jumbotron-fluid text-center">
-    <h1><em>{{title}}</em><br><small>{{artist}}</small></h1>
-</div>
+    <h1><em>{{title}}</em><br><small><a routerLink="/artist/{{artist}}">{{artist}}</a></small></h1>
 
-<div *ngFor="let x of details">
-    <!-- album cover art -->
-    <div class="text-center" *ngIf="x.CoverArt">
-        <img src="{{x.CoverArt}}" height="250" width="250">
+    <div *ngFor="let x of details">
+        <!-- album cover art -->
+        <div class="text-center" *ngIf="x.CoverArt">
+            <img src="{{x.CoverArt}}" height="250" width="250">
+        </div>
+        <hr>
+        <div [innerHtml]= "x.LFM_Summary" class="text-center" *ngIf="x.LFM_Summary">
+            <p>{{x.LFM_Summary}}</p>
+        </div>
+        <!-- album Spotify playlist -->
+        <!-- <div *ngIf="x.SpotifyPlayer">
+            <iframe src={{x.SpotifyPlayer}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </div> -->
     </div>
 
-    <div class="text-center" *ngIf="x.Summary">
-        <p>{{x.Summary}}</p>
-    </div>
-    <!-- album Spotify playlist -->
-    <!-- <div *ngIf="x.SpotifyPlayer">
-        <iframe src={{x.SpotifyPlayer}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-    </div> -->
 </div>

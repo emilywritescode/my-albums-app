@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AlbumsComponent } from './albums/albums.component';
 import { AlbumDetailsComponent } from './album-details/album-details.component';
+import { ArtistDetailsComponent } from './artist-details/artist-details.component';
 
 const routes: Routes = [
     { // landing page is the WelcomeComponent
@@ -19,6 +20,11 @@ const routes: Routes = [
         path: "album/:title/:artist",
         pathMatch: 'full',
         component: AlbumDetailsComponent
+    },
+    {
+        path: "artist/:name",
+        pathMatch: 'full',
+        component: ArtistDetailsComponent
     }
 ];
 

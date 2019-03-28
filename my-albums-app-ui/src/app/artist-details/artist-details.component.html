@@ -1,0 +1,22 @@
+<div class="jumbotron jumbotron-fluid text-center">
+    <h1>{{name}}</h1>
+
+    <div *ngIf="details.Spotify.Image">
+        <img height="200" width="200" src={{details.Spotify.Image}}>
+    </div>
+
+    <div *ngIf="details">
+        <h3 class="card-title">Followers on Spotify</h3>
+        <p class="card-text">{{details.Spotify.Followers}}</p>
+
+        <div *ngIf="details.Spotify.Genres">
+            <h3>Genres</h3>
+            <ul>
+                <div *ngFor="let genre of details.Spotify.Genres">
+                    <li>{{genre}}</li>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+</div>
