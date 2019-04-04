@@ -1,22 +1,31 @@
 <div class="jumbotron jumbotron-fluid text-center">
     <h1>{{name}}</h1>
 
-    <div *ngIf="details.Spotify.Image">
-        <img height="200" width="200" src={{details.Spotify.Image}}>
-    </div>
-
     <div *ngIf="details">
-        <h3 class="card-title">Followers on Spotify</h3>
-        <p class="card-text">{{details.Spotify.Followers}}</p>
+        <div *ngIf="spotify">
+            <div *ngIf="spotify.Image">
+                <img height="200" width="200" src={{spotify.Image}}>
+            </div>
 
-        <div *ngIf="details.Spotify.Genres">
-            <h3>Genres</h3>
-            <ul>
-                <div *ngFor="let genre of details.Spotify.Genres">
-                    <li>{{genre}}</li>
+            <div *ngIf="details">
+                <!-- <div *ngIf="details.Wikidata.Description">
+                    <p>{{details.WikiData.Description}}</p>
+                </div> -->
+
+                <div *ngIf="spotify.Followers">
+                    <h3>Followers on Spotify</h3>
+                    <p>{{spotify.Followers|number}}</p>
                 </div>
-            </ul>
+
+                <div *ngIf="spotify.Genres">
+                    <h3>Genres</h3>
+                    <ul>
+                        <div *ngFor="let genre of spotify.Genres">
+                            <li>{{genre}}</li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>

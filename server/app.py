@@ -167,8 +167,7 @@ def album_slice(album):
 def getArtist(artist):
     # try Spotify search
     sp_artist_results = spotify_search_artist(artist)
-    print ("THIS IS COOL!!\n")
-    print(sp_artist_results)
+
 
     res_dict = {
         'Spotify' : {
@@ -187,10 +186,8 @@ def spotify_search_artist(artist):
     return res
 
 def google_kg_search_artist(artist):
-
-    "https://kgsearch.googleapis.com/v1/entities:search?query="
-"your_query&parameters"
-
+    req = requests.get
+    return None
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 export interface SpotifyDetails {
     Followers: number;
-    Genres: string[]
+    Genres: string[];
+    Image: string
 }
 
 export interface ArtistDetails {
