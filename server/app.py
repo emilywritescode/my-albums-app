@@ -167,13 +167,18 @@ def album_slice(album):
 def getArtist(artist):
     # try Spotify search
     sp_artist_results = spotify_search_artist(artist)
-
+    wikidata_artist_results = wikidata_search_artist(artist)
 
     res_dict = {
         'Spotify' : {
             'Followers': sp_artist_results['artists']['items'][0]['followers']['total'],
             'Genres': sp_artist_results['artists']['items'][0]['genres'],
             'Image': sp_artist_results['artists']['items'][0]['images'][0]['url']
+        },
+        'WikiData' : {
+            'OfficialSite': wikidata_artist_results['official'],
+            'Instagram' : wikidata_artist_results['ig'],
+            'Twitter' : wikidata_artist_results['tw']
         }
     }
 
@@ -185,9 +190,36 @@ def spotify_search_artist(artist):
     res = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     return res
 
-def google_kg_search_artist(artist):
-    req = requests.get
-    return None
+def wikidata_search_artist(artist):
+    wbsearch = requests.get('https://www.wikidata.org/w/api.php', params =
+    {
+        'action' : 'wbsearchentities',
+        'search' : artist,
+        'language' : 'en',
+        'limit' : 1,
+        'format' : 'json'
+    })
+
+    wbs_j = wbsearch.json()
+    wikidata_id = wbs_j['search'][0]['id']
+
+    wbget = requests.get('https://www.wikidata.org/w/api.php', params = {
+        'action' : 'wbgetentities',
+        'ids' : wikidata_id,
+        'languages' : 'en',
+        'props' : 'claims',
+        'format' : 'json'
+    })
+
+    wbg_j = wbget.json()
+
+    res = {
+        'official' : wbg_j['entities'][wikidata_id]['claims']['P856'][0]['mainsnak']['datavalue']['value'],
+        'ig' : wbg_j['entities'][wikidata_id]['claims']['P2003'][0]['mainsnak']['datavalue']['value'],
+        'tw' : wbg_j['entities'][wikidata_id]['claims']['P2002'][0]['mainsnak']['datavalue']['value']
+    }
+
+    return res
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
