@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
-import { ArtistDetails, ArtistService, SpotifyDetails } from '../artist.service'
+import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails } from '../artist.service'
 
 @Component({
     selector: 'app-artist-details',
@@ -11,6 +11,7 @@ export class ArtistDetailsComponent implements OnInit {
     name: string;
     details: ArtistDetails;
     spotify: SpotifyDetails;
+    wikidata: WikiDataDetails;
 
     constructor(
         private artistService : ArtistService,
@@ -23,6 +24,7 @@ export class ArtistDetailsComponent implements OnInit {
                 data => {
                     this.details = data;
                     this.spotify = this.details.Spotify;
+                    this.wikidata = this.details.WikiData;
                 },
                 error => {
                     alert ('Couldn\'t retrieve artist')

@@ -6,9 +6,14 @@ export interface SpotifyDetails {
     Genres: string[];
     Image: string
 }
-
+export interface WikiDataDetails {
+    OfficialSite: string;
+    Instagram: string;
+    Twitter: string;
+}
 export interface ArtistDetails {
     Spotify: SpotifyDetails;
+    WikiData: WikiDataDetails;
 }
 
 @Injectable({
