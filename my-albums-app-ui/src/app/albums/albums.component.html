@@ -8,17 +8,15 @@
 <div class="container">
     <table class="table">
         <tr>
-            <th>Month</th>
-            <th>Day</th>
+            <th>Date Listened</th>
             <th>Title</th>
             <th>Artist</th>
             <th>Release Year</th>
         </tr>
         <tr *ngFor="let album of albums">
-            <td>{{ album.Month }}</td>
-            <td>{{ album.Day }}</td>
+            <td>{{ album.Month }} {{ album.Day }}</td>
             <td><a routerLink="/album/{{album.Album}}/{{album.Artist}}">{{ album.Album }}</a></td>
-            <td>{{ album.Artist }}</td>
+            <td><a routerLink="/artist/{{album.Artist}}">{{ album.Artist }}</a></td>
             <td>{{ album.Release_Year }}</td>
         </tr>
     </table>
