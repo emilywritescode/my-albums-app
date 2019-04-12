@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --main-color: rgb(51,204,204);
+}
+
+a {
+    color: var(--main-color);
+    text-decoration: none;
+}
+a:hover {
+    color: black;
+    text-decoration: none;
+}

@@ -15,8 +15,8 @@
         </tr>
         <tr *ngFor="let album of albums">
             <td>{{ album.Month }} {{ album.Day }}</td>
-            <td><a routerLink="/album/{{album.Album}}/{{album.Artist}}">{{ album.Album }}</a></td>
-            <td><a routerLink="/artist/{{album.Artist}}">{{ album.Artist }}</a></td>
+            <td><a routerLink="/album/{{album.Album}}/{{album.Artist}}" class="album-title">{{ album.Album }}</a></td>
+            <td><a routerLink="/artist/{{album.Artist}}" class="album-artist">{{ album.Artist }}</a></td>
             <td>{{ album.Release_Year }}</td>
         </tr>
     </table>

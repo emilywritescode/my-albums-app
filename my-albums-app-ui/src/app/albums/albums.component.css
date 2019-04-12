@@ -1,0 +1,6 @@
+.jumbotron{
+    background-color: var(--main-color);
+}
+.album-title{
+    font-style: italic;
+}

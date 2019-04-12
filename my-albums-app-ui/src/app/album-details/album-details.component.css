@@ -1,0 +1,7 @@
+.artist {
+    text-decoration: none;
+}
+
+a {
+    color: var(--main-color);
+}

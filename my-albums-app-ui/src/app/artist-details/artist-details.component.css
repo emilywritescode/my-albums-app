@@ -3,3 +3,12 @@ ul {
     margin: 0;
     padding: 0;
 }
+
+#links {
+    display: inline-block;
+    text-align: left;
+}
+
+fa-icon {
+    padding-right: 0.5em;
+}

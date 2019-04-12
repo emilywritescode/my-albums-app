@@ -1,28 +1,44 @@
 <div class="jumbotron jumbotron-fluid text-center">
     <h1>{{name}}</h1>
-
-    <div *ngIf="spotify">
-        <div *ngIf="spotify.Image">
-            <img height="200" width="200" src={{spotify.Image}}>
-        </div>
-    </div>
-
-    <div *ngIf="wikidata.OfficialSite">
-        <a href={{wikidata.OfficialSite}}>{{wikidata.OfficialSite}}</a>
-    </div>
-
-    <div *ngIf="spotify.Followers">
-        <h3>Followers on Spotify</h3>
-        <p>{{spotify.Followers|number}}</p>
-    </div>
-
-    <div *ngIf="spotify.Genres">
-        <h3>Genres</h3>
-        <ul>
-            <div *ngFor="let genre of spotify.Genres">
-                <li>{{genre}}</li>
+    <i class="fas fa-link"></i>
+    <div *ngIf="details"> <!--Make sure details are loaded-->
+        <div *ngIf="spotify">
+            <div *ngIf="spotify.Image">
+                <img height="200" width="200" src={{spotify.Image}}>
             </div>
-        </ul>
-    </div>
+        </div>
 
+        <ul id="links">
+            <li>
+                <div *ngIf="wikidata.OfficialSite">
+                    <fa-icon [icon]="faLink"></fa-icon><a href={{wikidata.OfficialSite}}>Official Site</a>
+                </div>
+            </li>
+            <li>
+                <div *ngIf="wikidata.Instagram">
+                    <fa-icon [icon]="faInstagram"></fa-icon><a href="https://www.instagram.com/{{wikidata.Instagram}}">{{wikidata.Instagram}}</a>
+                </div>
+            </li>
+            <li>
+                <div *ngIf="wikidata.Twitter">
+                    <fa-icon [icon]="faTwitterSquare"></fa-icon><a href="https://www.twitter.com/{{wikidata.Twitter}}">{{wikidata.Twitter}}</a>
+                </div>
+            </li>
+        </ul>
+
+        <div *ngIf="spotify.Followers">
+            <h3>Followers on Spotify</h3>
+            <p>{{spotify.Followers|number}}</p>
+        </div>
+
+        <div *ngIf="spotify.Genres">
+            <h3>Genres</h3>
+            <ul>
+                <div *ngFor="let genre of spotify.Genres">
+                    <li>{{genre}}</li>
+                </div>
+            </ul>
+        </div>
+
+    </div>
 </div>

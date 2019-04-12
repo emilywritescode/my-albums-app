@@ -220,7 +220,6 @@ def wikidata_search_artist(artist):
     except Exception as e:
         print("wikidata get failed with exception: {}".format(e))
 
-
     wbg_j = wbget.json()
 
     res = {

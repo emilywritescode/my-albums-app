@@ -1,0 +1,11 @@
+.list-group-item-text {
+    color: var(--main-color);
+}
+
+.list-group-item{
+    border-color: var(--main-color);
+}
+
+.jumbotron{
+    background-color: var(--main-color);
+}
