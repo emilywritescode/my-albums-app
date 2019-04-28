@@ -171,9 +171,9 @@ def getArtist(artist):
 
     res_dict = {
         'Spotify' : {
-            'Followers': sp_artist_results['artists']['items'][0]['followers']['total'],
-            'Genres': sp_artist_results['artists']['items'][0]['genres'],
-            'Image': sp_artist_results['artists']['items'][0]['images'][0]['url']
+            'Followers': sp_artist_results['Followers'],
+            'Genres': sp_artist_results['Genres'],
+            'Image': sp_artist_results['Image']
         },
         'WikiData' : {
             'OfficialSite': wikidata_artist_results['official'],
@@ -189,7 +189,18 @@ def getArtist(artist):
 def spotify_search_artist(artist):
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
-    res = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
+
+    try:
+        spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
+    except Exception as e:
+        print("spotipy search for {} failed with exception: {}".format(artist, e))
+        return None
+
+    res = {
+        'Followers': spsearch['artists']['items'][0]['followers']['total'],
+        'Genres': spsearch['artists']['items'][0]['genres'],
+        'Image': spsearch['artists']['items'][0]['images'][0]['url']
+    }
     return res
 
 def wikidata_search_artist(artist):
@@ -219,6 +230,7 @@ def wikidata_search_artist(artist):
         })
     except Exception as e:
         print("wikidata get failed with exception: {}".format(e))
+        return None
 
     wbg_j = wbget.json()
 
@@ -227,8 +239,6 @@ def wikidata_search_artist(artist):
         'ig' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2003'),
         'tw' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2002')
     }
-
-
     return res
 
 def grabWikiValue(j_results, wiki_key):
