@@ -153,9 +153,11 @@ def lfm_search_album(album, artist):
     network = pylast.LastFMNetwork(api_key=config.LAST_FM_KEY, api_secret=config.LAST_FM_SECRET)
 
     get_album = network.get_album(artist, album)
-    res = get_album.get_wiki_content()
-
-    return res
+    r = str(get_album.get_wiki_content())
+    if r.rfind("<a href") == -1:
+        return None
+    else:
+        return r[:r.rfind("<a href")]
 
 def wp_search_album(album, artist):
     pass

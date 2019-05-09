@@ -2,9 +2,11 @@
     background-color: var(--main-color);
 }
 .album-title, .album-artist{
+    color: var(--link-color);
     background-image: linear-gradient(to right, transparent 50%, var(--main-color) 50%);
     background-size: 200%;
     transition: background-position 0.25s;
+    text-decoration-color: var(--main-color);
 }
 .album-title:hover, .album-artist:hover{
     background-position: -100%;
