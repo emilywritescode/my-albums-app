@@ -39,9 +39,9 @@ def get_artist(artist):
         },
         'WikiData' : {
             'OfficialSite': data[0][1],
+            'Facebook': data[0][3],
             'Instagram' : data[0][4],
             'Twitter' : data[0][2],
-            'Facebook': data[0][3]
         }
     }
 
