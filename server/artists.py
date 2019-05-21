@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import requests
+
 from flask import jsonify
+
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
 import config
+
 import mysql.connector
 
 
@@ -46,8 +49,9 @@ def get_artist(artist):
     }
 
     conn.close()
-
+    print(res_dict)
     return jsonify(res_dict)
+
 
 def init_artist(artist):
     try: #connecting to DB
@@ -96,6 +100,7 @@ def spotify_search_artist(artist):
     }
     return res
 
+
 def wikidata_search_artist(artist):
     try:
         wbsearch = requests.get('https://www.wikidata.org/w/api.php', params =
@@ -134,8 +139,8 @@ def wikidata_search_artist(artist):
         'fb' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2013').encode('utf-8')
     }
 
-    print(res)
     return res
+
 
 def grabWikiValue(j_results, wiki_key):
     try:

@@ -129,13 +129,13 @@ def getAlbum(album, artist):
     lfm_summary = lfm_search_album(album, artist)
 
     # try Wikipedia search
-    wp_summary = wp_search_album(album, artist)
+   # wp_summary = wp_search_album(album, artist)
 
     res_dict = [{
         'CoverArt' : sp_album_cover,
         'SpotifyPlayer' : sp_album_embed,
         'LFM_Summary': lfm_summary,
-        'WP_Summary': wp_summary
+        #'WP_Summary': wp_summary
     }]
     print(res_dict)
 
