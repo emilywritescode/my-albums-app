@@ -37,7 +37,7 @@ def get_artist(artist):
     res_dict = {
         'Spotify' : {
             'Followers': data[0][6],
-            'Genres': data[0][5],
+            'Genres': data[0][5].split(','),
             'Image': data[0][7]
         },
         'WikiData' : {
@@ -136,7 +136,7 @@ def wikidata_search_artist(artist):
         'official' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P856'),
         'ig' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2003'),
         'tw' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2002'),
-        'fb' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2013').encode('utf-8')
+        'fb' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2013')
     }
 
     return res
