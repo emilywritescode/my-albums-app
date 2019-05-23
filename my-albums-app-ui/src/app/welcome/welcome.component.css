@@ -1,12 +1,32 @@
-.list-group-item-text {
-    color: var(--main-color);
-    padding: 0;
-    margin: 0;
+.num-records{
+    white-space: nowrap;
+    padding: 0px;
+    margin: 0px;
 }
 
-.list-group-item{
-    border-color: var(--main-color);
-    padding: 0;
+.result-item{
+    padding: 10px;
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+}
+
+.result-item:hover *, .result-item:hover{
+    background-color: var(--link-color);
+    color: var(--main-color);
+}
+
+label{
+    color: var(--main-color);
+}
+
+button{
+    background-color: var(--main-color);
+    color: var(--link-color);
+}
+
+button:hover{
+    background-color: var(--link-color);
+    color: var(--main-color);
 }
 
 .jumbotron{
