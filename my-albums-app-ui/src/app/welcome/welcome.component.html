@@ -6,11 +6,13 @@
     </div>
 </div>
 
-<h1 class="text-center">Select <small class="text-muted">a year to view</small></h1>
-
+<!-- Select table -->
 <div class="container">
+    <!-- section header -->
+    <h1 class="text-center">Select <small class="text-muted">a year to view</small></h1>
     <div class="row">
         <div class="col"></div>
+        <!-- links to tables -->
         <div class="col list-group-horizontal text-center" *ngFor="let table of tables">
             <a routerLink="/albums/{{table.Name}}" class="list-group-item list-group-item-action">
                 <h4 class="list-group-item-heading">{{table.Year}}</h4>
@@ -18,5 +20,51 @@
             </a>
         </div>
         <div class="col"></div>
+    </div>
+</div>
+
+<!-- Insert into table -->
+<div class="container">
+    <!-- section header -->
+    <h1 class="text-center">Insert <small class="text-muted">a new record into the database</small></h1>
+    <div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <form>
+            <div class="form-group row">
+                <label for="month" class="col-form-label">Month</label>
+                <div class="col-sm">
+                    <input type="number" min="1" max="12" class="form-control" id="month" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="day" class="col-form-label">Day</label>
+                <div class="col-sm">
+                    <input type="number" min="1" max="31" class="form-control" id="day">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="title" class="col-form-label">Title</label>
+                <div class="col-sm">
+                    <input type="text" class="form-control" id="title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="artist" class="col-form-label">Artist</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="artist">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="relyear" class="col-form-label">Release Year</label>
+                <div class="col-sm">
+                    <input type="text" min="1950" max="2019" class="form-control" id="relyear">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Insert</button>
+        </form>
+    </div>
+    <div class="col"></div>
     </div>
 </div>
