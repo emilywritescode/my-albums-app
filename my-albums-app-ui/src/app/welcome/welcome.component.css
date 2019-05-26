@@ -1,9 +1,35 @@
-.list-group-item-text {
+.num-records{
+    white-space: nowrap;
+    padding: 0px;
+    margin: 0px;
+}
+
+.table-year{
+    color: var(--accent-color);
+}
+
+.result-item{
+    padding: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+}
+
+.result-item:hover{
+    border: 1px solid var(--main-color);
+    box-shadow: inset 0px 0px 5px 0px var(--main-color);
+}
+
+.form-control{
     color: var(--main-color);
 }
 
-.list-group-item{
+button{
+    border-color: var(--accent-color);
+}
+
+button:hover{
     border-color: var(--main-color);
+    box-shadow: inset 0px 0px 5px 0px var(--main-color);
 }
 
 .jumbotron{
