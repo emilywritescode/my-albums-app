@@ -32,44 +32,35 @@
     <div class="row">
     <div class="col-sm"></div>
     <div class="col-sm-4">
-        <form>
-            <div class="form-group row">
-                <label for="table">Table</label>
-                <div class="col-sm">
-                    <select class="form-control" name="table">
-                        <option selected value="albums_2019">2019</option>
-                        <option value="albums_2018">2018</option>
-                    </select>
-                </div>
-            </div>
+        <form (submit)="insertAlbum(albumForm.value)" #albumForm="ngForm">
             <div class="form-group row">
                 <label for="month" class="col-form-label">Month</label>
                 <div class="col-sm">
-                    <input type="number" min="1" max="12" class="form-control" id="month" required>
+                    <input type="number" min="1" max="12" class="form-control" id="month" required name="month">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="day" class="col-form-label">Day</label>
                 <div class="col-sm">
-                    <input type="number" min="1" max="31" class="form-control" id="day">
+                    <input type="number" min="1" max="31" class="form-control" id="day" required name="day">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="title" class="col-form-label">Title</label>
                 <div class="col-sm">
-                    <input type="text" class="form-control" id="title">
+                    <input type="text" class="form-control" id="title" required name="album">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="artist" class="col-form-label">Artist</label>
                 <div class="col-sm">
-                    <input type="text" class="form-control" id="artist">
+                    <input type="text" class="form-control" id="artist" required name="artist">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="relyear" class="col-form-label">Release Year</label>
                 <div class="col-sm">
-                    <input type="text" min="1950" max="2019" class="form-control" id="relyear">
+                    <input type="text" min="1950" max="2019" class="form-control" id="relyear" name="relyear">
                 </div>
             </div>
             <div class="form-group text-center">
