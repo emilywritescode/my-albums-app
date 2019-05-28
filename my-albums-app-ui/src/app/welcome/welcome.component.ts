@@ -12,7 +12,7 @@ import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angul
 })
 export class WelcomeComponent implements OnInit {
     tables: Table[];
-    record: Record;
+    // record: Record;
 
     constructor(
         private albumService: AlbumsService,
