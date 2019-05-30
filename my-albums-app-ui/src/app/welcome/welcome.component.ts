@@ -12,7 +12,8 @@ import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angul
 })
 export class WelcomeComponent implements OnInit {
     tables: Table[];
-    // record: Record;
+    record = new Record();
+    diag_msg: string;
 
     constructor(
         private albumService: AlbumsService,
@@ -32,24 +33,22 @@ export class WelcomeComponent implements OnInit {
     }
     ngOnInit() {}
 
-    insertAlbum(value:any){
-        console.log(value)
-        // let httpOptions = {
-        //     headers: new HttpHeaders({
-        //         'Content-Type': 'application/json'
-        //     })
-        // };
-        // this.http.post('/api/insertrecord', JSON.stringify(this.record), httpOptions).subscribe(
-        //     data => {
-        //         this.diag_msg = JSON.stringify(data);
-        //         alert(this.diag_msg);
-        //     },
-        //     (error: HttpErrorResponse)=> {
-        //         if(error.status != 200){
-        //             alert(JSON.stringify(error.error));
-        //         }
-        //     }
-        // );
+    insertAlbum(){
+        let httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+        this.http.post('/api/insertrecord', JSON.stringify(this.record), httpOptions).subscribe(
+            data => {
+                this.diag_msg = JSON.stringify(data);
+                alert(this.diag_msg);
+            },
+            (error: HttpErrorResponse)=> {
+                if(error.status != 200){
+                    alert(JSON.stringify(error.error));
+                }
+            }
+        );
     }
-
 }

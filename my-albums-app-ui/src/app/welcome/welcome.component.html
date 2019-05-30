@@ -32,35 +32,35 @@
     <div class="row">
     <div class="col-sm"></div>
     <div class="col-sm-6">
-        <form #albumForm="ngForm" (ngSubmit)="insertAlbum(albumForm.value)" >
+        <form #albumForm="ngForm" (ngSubmit)="insertAlbum()" >
             <div class="form-group row">
                 <label for="month" class="col-form-label">Month</label>
                 <div class="col-sm">
-                    <input type="number" min="1" max="12" class="form-control" id="month" required name="month" ngModel>
+                    <input type="number" min="1" max="12" class="form-control" id="month" required name="month" [(ngModel)]="record.month">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="day" class="col-form-label">Day</label>
                 <div class="col-sm">
-                    <input type="number" min="1" max="31" class="form-control" id="day" required name="day" ngModel>
+                    <input type="number" min="1" max="31" class="form-control" id="day" required name="day" [(ngModel)]="record.day">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="title" class="col-form-label">Title</label>
                 <div class="col-sm">
-                    <input type="text" class="form-control" id="title" required name="album" ngModel>
+                    <input type="text" class="form-control" id="title" required name="album" [(ngModel)]="record.album">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="artist" class="col-form-label">Artist</label>
                 <div class="col-sm">
-                    <input type="text" class="form-control" id="artist" required name="artist" ngModel>
+                    <input type="text" class="form-control" id="artist" required name="artist" [(ngModel)]="record.artist">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="relyear" class="col-form-label">Release Year</label>
                 <div class="col-sm">
-                    <input type="text" min="1950" max="2019" class="form-control" id="relyear" name="relyear" ngModel>
+                    <input type="number" min="1950" max="2019" class="form-control" id="relyear" name="relyear" [(ngModel)]="record.rel_year">
                 </div>
             </div>
             <div class="form-group text-center">

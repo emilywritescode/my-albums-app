@@ -25,35 +25,38 @@ mysql.init_app(app)
 
 @app.route("/api/insertrecord", methods=['POST'])
 def insertRecord():
-    print(request.get_json())
-    return jsonify("hiii")
-    # _m = request.form['Month']
-    # _d = request.form['Day']
-    # _t = request.form['Album']
-    # _a = request.form['Artist']
-    # _r = request.form['Relyear']
-    #
-    # return jsonify("2019", _m, _d, _t, _a, _r)
-    # except Exception:
-    #     return render_template('error.html', error_msg = "form data not submitted properly")
-    #
-    # if _tab and _m and _d and _t and _a and _r:
-    #     conn = mysql.connect()
-    #     cursor = conn.cursor()
-    #     try:
-    #         cursor.callproc('insertRecord', (_tab, _m, _d, _t, _a, _r))
-    #     except Exception as e:
-    #         return render_template('error.html', error_msg= str(e))
-    #
-    #     data = cursor.fetchall()
-    #
-    #     if len(data) is 0:
-    #         conn.commit()
-    #         return render_template('insert.html', success_msg="Nice tunes! Record successfully entered!")
-    #     else:
-    #         return render_template('error.html', error_msg= "no data was returned")
-    # else:
-    #     return render_template('error.html', error_msg= "one or more form fields not filled out")
+    req = request.get_json()
+
+    _tab = config.latest_year
+    _m = req['month']
+    _d = req['day']
+    _t = req['album']
+    _a = req['artist']
+    _r = req['rel_year']
+
+    if _tab and _m and _d and _t and _a and _r:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        try:
+            args = (_tab,
+                    _m,
+                    _d,
+                    _t,
+                    _a,
+                    _r
+                    )
+            cursor.callproc('insertRecord', (args))
+        except Exception as e:
+            print("failed to insert")
+            return None
+
+        conn.commit()
+        conn.close()
+        return jsonify("ya yeet")
+
+    else:
+        return jsonify("ya didn't give me all the inputs")
+
 
 @app.route('/api/showtables', methods=['GET'])
 def showTables():
