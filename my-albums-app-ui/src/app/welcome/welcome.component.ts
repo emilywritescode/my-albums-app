@@ -42,13 +42,16 @@ export class WelcomeComponent implements OnInit {
         this.http.post('/api/insertrecord', JSON.stringify(this.record), httpOptions).subscribe(
             data => {
                 this.diag_msg = JSON.stringify(data);
-                alert(this.diag_msg);
             },
             (error: HttpErrorResponse)=> {
                 if(error.status != 200){
-                    alert(JSON.stringify(error.error));
+                    this.diag_msg = "Error inserting into database.";
                 }
             }
         );
+    }
+
+    dismissAlert(){
+        this.diag_msg = null;
     }
 }

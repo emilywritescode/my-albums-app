@@ -47,15 +47,15 @@ def insertRecord():
                     )
             cursor.callproc('insertRecord', (args))
         except Exception as e:
-            print("failed to insert")
-            return None
+            print(str(e))
+            return jsonify("Error with inserting into database.")
 
         conn.commit()
         conn.close()
-        return jsonify("ya yeet")
+        return jsonify('Record for {} by {} successfully inserted into database'.format(_t, _a))
 
     else:
-        return jsonify("ya didn't give me all the inputs")
+        return jsonify("Some input fields were missing")
 
 
 @app.route('/api/showtables', methods=['GET'])
