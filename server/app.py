@@ -69,7 +69,7 @@ def showTables():
 
     data = cursor.fetchall()
 
-    if len(data) is 0:
+    if len(data) == 0:
         return make_response("not found", 404)
     else:
         conn.commit()
@@ -95,7 +95,7 @@ def showRecords(table):
 
     data = cursor.fetchall()
 
-    if len(data) is 0:
+    if len(data) == 0:
         return make_response("not found", 404)
     else:
         conn.commit()

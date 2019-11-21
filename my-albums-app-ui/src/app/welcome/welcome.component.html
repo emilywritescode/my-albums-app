@@ -36,7 +36,7 @@
             <!-- Return message from submit function -->
             <div *ngIf="diag_msg" class="alert alert-warning alert-dismissible fade show" role="alert">
               <strong>{{diag_msg}}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dismissAlert()">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dismissAlert(); resetFormValues()">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -79,6 +79,7 @@
             <div class="form-group text-center">
                 <button type="submit" class="btn">Insert</button>
                 <button type="reset" class="btn">Clear</button>
+                <button type="button" class="btn" (click)="initDate()">Set to today</button>
             </div>
         </form>
     </div>

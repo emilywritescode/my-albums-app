@@ -30,6 +30,7 @@ export class WelcomeComponent implements OnInit {
                 }
             );
         });
+        this.initDate();
     }
     ngOnInit() {}
 
@@ -53,5 +54,17 @@ export class WelcomeComponent implements OnInit {
 
     dismissAlert(){
         this.diag_msg = null;
+    }
+
+    resetFormValues(){
+        this.record.album = undefined;
+        this.record.artist = undefined;
+        this.record.rel_year = undefined;
+        this.initDate();
+    }
+    initDate(){
+        var today = new Date();
+        this.record.month = today.getMonth() + 1;
+        this.record.day = today.getDate();
     }
 }
