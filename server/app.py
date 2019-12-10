@@ -23,35 +23,40 @@ app.config['MYSQL_DATABASE_DB'] = config.mysqldb
 mysql.init_app(app)
 
 
-@app.route("/insertrecord", methods=['POST'])
+@app.route("/api/insertrecord", methods=['POST'])
 def insertRecord():
-    try:
-        _tab = request.form['table']
-        _m = request.form['month']
-        _d = request.form['day']
-        _t = request.form['title']
-        _a = request.form['artist']
-        _r = request.form['relyear']
-    except Exception:
-        return render_template('error.html', error_msg = "form data not submitted properly")
+    req = request.get_json()
+
+    _tab = config.latest_year
+    _m = req['month']
+    _d = req['day']
+    _t = req['album']
+    _a = req['artist']
+    _r = req['rel_year']
 
     if _tab and _m and _d and _t and _a and _r:
         conn = mysql.connect()
         cursor = conn.cursor()
         try:
-            cursor.callproc('insertRecord', (_tab, _m, _d, _t, _a, _r))
+            args = (_tab,
+                    _m,
+                    _d,
+                    _t,
+                    _a,
+                    _r
+                    )
+            cursor.callproc('insertRecord', (args))
         except Exception as e:
-            return render_template('error.html', error_msg= str(e))
+            print(str(e))
+            return jsonify("Error with inserting into database.")
 
-        data = cursor.fetchall()
+        conn.commit()
+        conn.close()
+        return jsonify('Record for {} by {} successfully inserted into database'.format(_t, _a))
 
-        if len(data) is 0:
-            conn.commit()
-            return render_template('insert.html', success_msg="Nice tunes! Record successfully entered!")
-        else:
-            return render_template('error.html', error_msg= "no data was returned")
     else:
-        return render_template('error.html', error_msg= "one or more form fields not filled out")
+        return jsonify("Some input fields were missing")
+
 
 @app.route('/api/showtables', methods=['GET'])
 def showTables():
@@ -64,7 +69,7 @@ def showTables():
 
     data = cursor.fetchall()
 
-    if len(data) is 0:
+    if len(data) == 0:
         return make_response("not found", 404)
     else:
         conn.commit()
@@ -90,7 +95,7 @@ def showRecords(table):
 
     data = cursor.fetchall()
 
-    if len(data) is 0:
+    if len(data) == 0:
         return make_response("not found", 404)
     else:
         conn.commit()

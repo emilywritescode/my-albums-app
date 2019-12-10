@@ -30,45 +30,59 @@
     <!-- section header -->
     <h1 class="text-center">Insert <small class="text-muted">a new record into the database</small></h1>
     <div class="row">
-    <div class="col-sm"></div>
-    <div class="col-sm-4">
-        <form>
+    <div class="col"></div>
+    <div class="col">
+        <form #albumForm="ngForm" (ngSubmit)="insertAlbum()" >
+            <!-- Return message from submit function -->
+            <div *ngIf="diag_msg" class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>{{diag_msg}}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dismissAlert(); resetFormValues()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- Month -->
             <div class="form-group row">
                 <label for="month" class="col-form-label">Month</label>
                 <div class="col-sm">
-                    <input type="number" min="1" max="12" class="form-control" id="month" required>
+                    <input type="number" min="1" max="12" class="form-control" id="month" required name="month" [(ngModel)]="record.month">
                 </div>
             </div>
+            <!-- Day -->
             <div class="form-group row">
                 <label for="day" class="col-form-label">Day</label>
                 <div class="col-sm">
-                    <input type="number" min="1" max="31" class="form-control" id="day">
+                    <input type="number" min="1" max="31" class="form-control" id="day" required name="day" [(ngModel)]="record.day">
                 </div>
             </div>
+            <!-- Title -->
             <div class="form-group row">
                 <label for="title" class="col-form-label">Title</label>
                 <div class="col-sm">
-                    <input type="text" class="form-control" id="title">
+                    <input type="text" class="form-control" id="title" required name="album" [(ngModel)]="record.album">
                 </div>
             </div>
+            <!-- Artist -->
             <div class="form-group row">
                 <label for="artist" class="col-form-label">Artist</label>
                 <div class="col-sm">
-                    <input type="text" class="form-control" id="artist">
+                    <input type="text" class="form-control" id="artist" required name="artist" [(ngModel)]="record.artist">
                 </div>
             </div>
+            <!-- Release year -->
             <div class="form-group row">
                 <label for="relyear" class="col-form-label">Release Year</label>
                 <div class="col-sm">
-                    <input type="text" min="1950" max="2019" class="form-control" id="relyear">
+                    <input type="number" min="1950" max="2019" class="form-control" id="relyear" name="relyear" [(ngModel)]="record.rel_year">
                 </div>
             </div>
-            <div class="form-group row">
+            <!-- Submit and clear buttons -->
+            <div class="form-group text-center">
                 <button type="submit" class="btn">Insert</button>
                 <button type="reset" class="btn">Clear</button>
+                <button type="button" class="btn" (click)="initDate()">Set to today</button>
             </div>
         </form>
     </div>
-    <div class="col-sm"></div>
+    <div class="col"></div>
     </div>
 </div>

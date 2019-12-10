@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <ul id="links">
+        <ul class="list-unstyled">
             <li>
                 <div *ngIf="wikidata.OfficialSite">
                     <fa-icon [icon]="faLink"></fa-icon><a href={{wikidata.OfficialSite}}>Official Site</a>
@@ -32,17 +32,15 @@
         </ul>
 
         <div *ngIf="spotify.Followers">
-            <h3>Followers on Spotify</h3>
+            <h5>Followers on Spotify</h5>
             <p>{{spotify.Followers|number}}</p>
         </div>
 
         <div *ngIf="spotify.Genres">
-            <h3>Genres</h3>
-            <ul>
-                <div *ngFor="let genre of spotify.Genres">
-                    <li>{{genre}}</li>
-                </div>
-            </ul>
+            <h5>Genres</h5>
+            <div *ngFor="let genre of spotify.Genres">
+                <span class="badge badge-info genre-label">{{genre}}</span>
+            </div>
         </div>
 
     </div>
