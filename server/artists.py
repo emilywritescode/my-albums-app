@@ -20,16 +20,18 @@ def get_artist(artist):
         return None
 
     try: #calling DB stored proc for searching artist
-        sa_exec = 'call searchArtist (%s)'
-        cursor.execute(sa_exec, (artist,))
-        data = cursor.fetchall()
-        if len(data) is 0: #artist not found in DB
+        data = cursor.callproc('searchArtist', [artist])
+
+        if len(data) == 0: #artist not found in DB
             conn.close()
             init_artist(artist)
             conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
             cursor = conn.cursor(buffered=True)
-            cursor.execute(sa_exec, (artist,))
-            data = cursor.fetchall()
+            data = cursor.callproc('searchArtist', [artist])
+
+        for result in cursor.stored_results():
+            data = result.fetchall()
+
     except Exception as e2:
         print('Error with searching artist: {}'.format(e2))
         return None
