@@ -45,7 +45,7 @@ def insertRecord():
 
         data = cursor.fetchall()
 
-        if len(data) is 0:
+        if len(data) == 0:
             conn.commit()
             return render_template('insert.html', success_msg="Nice tunes! Record successfully entered!")
         else:
@@ -64,7 +64,7 @@ def showTables():
 
     data = cursor.fetchall()
 
-    if len(data) is 0:
+    if len(data) == 0:
         return make_response("not found", 404)
     else:
         conn.commit()
@@ -90,7 +90,7 @@ def showRecords(table):
 
     data = cursor.fetchall()
 
-    if len(data) is 0:
+    if len(data) == 0:
         return make_response("not found", 404)
     else:
         conn.commit()
