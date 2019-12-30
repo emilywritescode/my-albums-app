@@ -16,24 +16,24 @@ def get_artist(artist):
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
-        print('Error with connecting to db: {}'.format(e))
+        print(f'Error with connecting to db: {e}')
         return None
 
     try: #calling DB stored proc for searching artist
-        data = cursor.callproc('searchArtist', [artist])
+        data = cursor.callproc('searchArtist', (artist,))
 
-        if len(data) == 0: #artist not found in DB
+        if len(data) < 2: #artist not found in DB
             conn.close()
             init_artist(artist)
             conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
             cursor = conn.cursor(buffered=True)
-            data = cursor.callproc('searchArtist', [artist])
+            data = cursor.callproc('searchArtist', (artist,))
 
         for result in cursor.stored_results():
             data = result.fetchall()
 
     except Exception as e2:
-        print('Error with searching artist: {}'.format(e2))
+        print(f'Error with searching artist: {e2}')
         return None
 
     res_dict = {
@@ -60,7 +60,7 @@ def init_artist(artist):
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
-        print('Error with connecting to db: {}'.format(e))
+        print(f'Error with connecting to db: {e}')
         return None
 
     sp_artist_res = spotify_search_artist(artist)
@@ -77,8 +77,9 @@ def init_artist(artist):
                 sp_artist_res['Image']
                 )
         cursor.callproc('insertArtist', (args))
+        print(f'Successfully init artist: {artist}')
     except Exception as e:
-        print("Something happened with attempting to insert {} into the DB: {}".format(artist, e))
+        print(f'Something happened with attempting to insert {artist} into the DB: {e}')
         return
 
     conn.commit()
@@ -92,7 +93,7 @@ def spotify_search_artist(artist):
     try:
         spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     except Exception as e:
-        print("spotipy search for {} failed with exception: {}".format(artist, e))
+        print(f'spotipy search for {artist} failed with exception: {e}')
         return None
 
     res = {
@@ -114,7 +115,7 @@ def wikidata_search_artist(artist):
             'format' : 'json'
         })
     except Exception as e:
-        print("wikidata search for {} failed with exception: {}".format(artist, e))
+        print(f'wikidata search for {artist} failed with exception: {e}')
         return None
 
     wbs_j = wbsearch.json()
@@ -129,7 +130,7 @@ def wikidata_search_artist(artist):
             'format' : 'json'
         })
     except Exception as e:
-        print("wikidata get failed with exception: {}".format(e))
+        print(f'wikidata get failed with exception: {e}')
         return None
 
     wbg_j = wbget.json()
@@ -149,5 +150,5 @@ def grabWikiValue(j_results, wiki_key):
         res = j_results[wiki_key][0]['mainsnak']['datavalue']['value']
         return res
     except KeyError as e:
-        print("Error Key for: {}".format(e))
+        print(f'Error Key for: {e}')
         return None
