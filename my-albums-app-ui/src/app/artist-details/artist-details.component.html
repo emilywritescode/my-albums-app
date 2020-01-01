@@ -30,14 +30,11 @@
                 </div>
             </li>
         </ul>
-
         <div *ngIf="spotify.Followers">
-            <h5>Followers on Spotify</h5>
-            <p>{{spotify.Followers|number}}</p>
+            <fa-icon [icon]="faSpotify"></fa-icon><a href="https://open.spotify.com/artist/{{spotify.Artist_URI}}">{{spotify.Followers|number}} followers</a>
         </div>
 
         <div *ngIf="spotify.Genres">
-            <h5>Genres</h5>
             <div *ngFor="let genre of spotify.Genres">
                 <span class="badge badge-info genre-label">{{genre}}</span>
             </div>

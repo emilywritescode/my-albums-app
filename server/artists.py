@@ -12,6 +12,8 @@ import mysql.connector
 
 
 def get_artist(artist):
+    update_artist(artist, 'sp_URI', (spotify_search_artist(artist)['Artist_URI']))
+
     try: #connecting to DB
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
@@ -19,25 +21,23 @@ def get_artist(artist):
         print(f'Error with connecting to db: {e}')
         return None
 
-    try: #calling DB stored proc for searching artist
-        data = cursor.callproc('searchArtist', (artist,))
-
-        if len(data) < 2: #artist not found in DB
-            conn.close()
-            init_artist(artist)
-            conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
-            cursor = conn.cursor(buffered=True)
-            data = cursor.callproc('searchArtist', (artist,))
-
+    data = cursor.callproc('searchArtist', [artist,])
+    for result in cursor.stored_results():
+        data = result.fetchall()
+        print(f'data: {data}')
+    if(len(data) == 0):
+        print(f'Artist not found in DB: {artist}')
+        init_artist(artist)
+        conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
+        cursor = conn.cursor(buffered=True)
+        cursor.callproc('searchArtist', [artist,])
         for result in cursor.stored_results():
             data = result.fetchall()
-
-    except Exception as e2:
-        print(f'Error with searching artist: {e2}')
-        return None
+            print(f'after inserting {data}')
 
     res_dict = {
         'Spotify' : {
+            'Artist_URI': data[0][8],
             'Followers': data[0][6],
             'Genres': data[0][5].split(','),
             'Image': data[0][7]
@@ -74,7 +74,8 @@ def init_artist(artist):
                 wiki_artist_res['ig'],
                 sp_artist_res['Genres'],
                 sp_artist_res['Followers'],
-                sp_artist_res['Image']
+                sp_artist_res['Image'],
+                sp_artist_res['Artist_URI']
                 )
         cursor.callproc('insertArtist', (args))
         print(f'Successfully init artist: {artist}')
@@ -86,17 +87,44 @@ def init_artist(artist):
     conn.close()
 
 
+def update_artist(artist, column, value):
+    try: #connecting to DB
+        conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
+        cursor = conn.cursor(buffered=True)
+    except Exception as e:
+        print(f'Error with connecting to db: {e}')
+        return None
+
+    try:
+        cursor.callproc('updateArtist', (artist, column, value))
+        print(f'Successfully updated {artist}. col: {column} with value: {value}')
+    except Exception as e:
+        print(f'Something happened with attempting to update {artist}. col: {column} with value: {value} + {e}')
+        return
+
+    conn.commit()
+    conn.close()
+
+
 def spotify_search_artist(artist):
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
+
+    res = {
+        'Artist_URI': None,
+        'Followers': None,
+        'Genres': None,
+        'Image': None
+    }
 
     try:
         spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     except Exception as e:
         print(f'spotipy search for {artist} failed with exception: {e}')
-        return None
+        return res
 
     res = {
+        'Artist_URI': spsearch['artists']['items'][0]['id'],
         'Followers': spsearch['artists']['items'][0]['followers']['total'],
         'Genres': ','.join(map(str, (spsearch['artists']['items'][0]['genres']))),
         'Image': spsearch['artists']['items'][0]['images'][0]['url']
@@ -105,6 +133,12 @@ def spotify_search_artist(artist):
 
 
 def wikidata_search_artist(artist):
+    res = {
+        'official' : None,
+        'ig' : None,
+        'tw' : None,
+        'fb' : None
+    }
     try:
         wbsearch = requests.get('https://www.wikidata.org/w/api.php', params =
         {
@@ -114,12 +148,11 @@ def wikidata_search_artist(artist):
             'limit' : 1,
             'format' : 'json'
         })
+        wbs_j = wbsearch.json()
+        wikidata_id = wbs_j['search'][0]['id']
     except Exception as e:
         print(f'wikidata search for {artist} failed with exception: {e}')
-        return None
-
-    wbs_j = wbsearch.json()
-    wikidata_id = wbs_j['search'][0]['id']
+        return res
 
     try:
         wbget = requests.get('https://www.wikidata.org/w/api.php', params = {
@@ -129,11 +162,10 @@ def wikidata_search_artist(artist):
             'props' : 'claims',
             'format' : 'json'
         })
+        wbg_j = wbget.json()
     except Exception as e:
         print(f'wikidata get failed with exception: {e}')
-        return None
-
-    wbg_j = wbget.json()
+        return res
 
     res = {
         'official' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P856'),
