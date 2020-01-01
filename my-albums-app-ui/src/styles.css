@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --main-color: rgb(51,204,204);
-    --link-color: rgb(51,204,204);
+    --main-color: #9453c2;
+    --link-color: #9453c2;
+    --jumbo-color: #9861c2;
+    --jumbo2-color: #bfa6e0;
     --accent-color: rgb(50,50,50);
-    --main-font: 'Work Sans';
+    --main-font: 'Verdana';
 }
 
 a {
