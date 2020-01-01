@@ -9,3 +9,7 @@ fa-icon {
     background-color: var(--main-color);
     border-radius: 4px;
 }
+
+.jumbotron{
+    background-color: var(--jumbo2-color);
+}

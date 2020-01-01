@@ -1,5 +1,5 @@
 .jumbotron{
-    background-color: var(--main-color);
+    background-color: var(--jumbo-color);
 }
 .album-title {
     font-style: italic;
