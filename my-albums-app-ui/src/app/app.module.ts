@@ -11,6 +11,7 @@ import { AlbumsComponent } from './albums/albums.component';
 import { AlbumDetailsComponent } from './album-details/album-details.component';
 import { ArtistDetailsComponent } from './artist-details/artist-details.component';
 import { InsertRecordComponent } from './insert-record/insert-record.component';
+import { YearlyStatsComponent } from './yearly-stats/yearly-stats.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { InsertRecordComponent } from './insert-record/insert-record.component';
     AlbumsComponent,
     AlbumDetailsComponent,
     ArtistDetailsComponent,
-    InsertRecordComponent
+    InsertRecordComponent,
+    YearlyStatsComponent
   ],
   imports: [
     BrowserModule,

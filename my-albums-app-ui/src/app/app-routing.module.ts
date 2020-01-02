@@ -5,6 +5,7 @@ import { InsertRecordComponent } from './insert-record/insert-record.component';
 import { AlbumsComponent } from './albums/albums.component';
 import { AlbumDetailsComponent } from './album-details/album-details.component';
 import { ArtistDetailsComponent } from './artist-details/artist-details.component';
+import { YearlyStatsComponent } from './yearly-stats/yearly-stats.component';
 
 
 const routes: Routes = [
@@ -32,8 +33,14 @@ const routes: Routes = [
         path: "artist/:name",
         pathMatch: 'full',
         component: ArtistDetailsComponent
+    },
+    {
+        path: "stats/:year",
+        pathMatch: 'full',
+        component: YearlyStatsComponent
     }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
