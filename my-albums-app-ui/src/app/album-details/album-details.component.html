@@ -1,6 +1,6 @@
 <div class="jumbotron jumbotron-fluid text-center">
     <h1 class="title"><em>{{title}}</em></h1>
-    <h3 class="artist"><a routerLink="/artist/{{artist}}">{{artist}}</a></h3>
+    <h3 class="artist"><a *ngIf="artist != 'various artists'" routerLink="/artist/{{artist}}">{{artist}}</a></h3><p *ngIf="artist == 'various artists'">{{artist}}</p>
 
     <div *ngFor="let x of details">
         <!-- album cover art -->

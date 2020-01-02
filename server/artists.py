@@ -12,8 +12,6 @@ import mysql.connector
 
 
 def get_artist(artist):
-    update_artist(artist, 'sp_URI', (spotify_search_artist(artist)['Artist_URI']))
-
     try: #connecting to DB
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
@@ -35,18 +33,29 @@ def get_artist(artist):
             data = result.fetchall()
             print(f'after inserting {data}')
 
+    ''' in MySQL db, artists:
+    artist_name,
+    official (website), twitter, facebook, instagram,
+    sp_URI
+    '''
+
+    sp_data = spotify_updated_search_artist(artist)
+
     res_dict = {
         'Spotify' : {
-            'Artist_URI': data[0][8],
-            'Followers': data[0][6],
-            'Genres': data[0][5].split(','),
-            'Image': data[0][7]
+            'Artist_URI': data[0][5],
+            'Followers': sp_data['Followers'],
+            'Genres': sp_data['Genres'].split(','),
+            'Image': sp_data['Image']
         },
         'WikiData' : {
             'OfficialSite': data[0][1],
             'Facebook': data[0][3],
             'Instagram' : data[0][4],
             'Twitter' : data[0][2],
+        },
+        'LastFM' : {
+            'Artist_URL': artist.replace(' ', '+')
         }
     }
 
@@ -63,7 +72,7 @@ def init_artist(artist):
         print(f'Error with connecting to db: {e}')
         return None
 
-    sp_artist_res = spotify_search_artist(artist)
+    sp_artist_res = spotify_init_search_artist(artist)
     wiki_artist_res = wikidata_search_artist(artist)
 
     try: #calling DB stored proc for inserting artist
@@ -72,9 +81,6 @@ def init_artist(artist):
                 wiki_artist_res['tw'],
                 wiki_artist_res['fb'],
                 wiki_artist_res['ig'],
-                sp_artist_res['Genres'],
-                sp_artist_res['Followers'],
-                sp_artist_res['Image'],
                 sp_artist_res['Artist_URI']
                 )
         cursor.callproc('insertArtist', (args))
@@ -106,27 +112,39 @@ def update_artist(artist, column, value):
     conn.close()
 
 
-def spotify_search_artist(artist):
+def spotify_init_search_artist(artist):
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
 
     res = {
-        'Artist_URI': None,
-        'Followers': None,
-        'Genres': None,
-        'Image': None
+        'Artist_URI': None
     }
 
     try:
         spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     except Exception as e:
-        print(f'spotipy search for {artist} failed with exception: {e}')
+        print(f'spotipy init search for {artist} failed with exception: {e}')
         return res
 
     res = {
-        'Artist_URI': spsearch['artists']['items'][0]['id'],
-        'Followers': spsearch['artists']['items'][0]['followers']['total'],
+        'Artist_URI': spsearch['artists']['items'][0]['id']
+    }
+    return res
+
+
+def spotify_updated_search_artist(artist):
+    client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
+    sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
+
+    try:
+        spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
+    except Exception as e:
+        print(f'spotipy search for {artist} failed with exception: {e}')
+        return None
+
+    res = {
         'Genres': ','.join(map(str, (spsearch['artists']['items'][0]['genres']))),
+        'Followers': spsearch['artists']['items'][0]['followers']['total'],
         'Image': spsearch['artists']['items'][0]['images'][0]['url']
     }
     return res

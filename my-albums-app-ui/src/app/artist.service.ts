@@ -13,9 +13,13 @@ export interface WikiDataDetails {
     Instagram: string;
     Twitter: string;
 }
+export interface LastFMDetails {
+    Artist_URL: string;
+}
 export interface ArtistDetails {
     Spotify: SpotifyDetails;
     WikiData: WikiDataDetails;
+    LastFM: LastFMDetails;
 }
 
 @Injectable({

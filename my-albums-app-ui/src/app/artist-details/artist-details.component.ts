@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
-import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails } from '../artist.service'
+import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails, LastFMDetails } from '../artist.service'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { faInstagram, faTwitterSquare, faFacebook, faSpotify } from '@fortawesome/free-brands-svg-icons'
 
@@ -14,6 +14,7 @@ export class ArtistDetailsComponent implements OnInit {
     details: ArtistDetails;
     spotify: SpotifyDetails;
     wikidata: WikiDataDetails;
+    lastfm: LastFMDetails;
     faLink = faLink;
     faInstagram = faInstagram;
     faTwitterSquare = faTwitterSquare;
@@ -32,6 +33,7 @@ export class ArtistDetailsComponent implements OnInit {
                     this.details = data;
                     this.spotify = this.details.Spotify;
                     this.wikidata = this.details.WikiData;
+                    this.lastfm = this.details.LastFM;
                 },
                 error => {
                     alert ('Couldn\'t retrieve artist')

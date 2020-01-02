@@ -1,0 +1,16 @@
+button{
+    border-color: var(--accent-color);
+}
+
+button:hover{
+    border-color: var(--main-color);
+    box-shadow: inset 0px 0px 5px 0px var(--main-color);
+}
+
+.jumbotron{
+    background-color: var(--jumbo-color);
+}
+
+.form-control{
+    color: var(--main-color);
+}
