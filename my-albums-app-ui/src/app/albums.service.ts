@@ -20,7 +20,9 @@ export interface AlbumDetails {
     SpotifyPlayer: string;
     Summary: string;
 }
+export interface Stats {
 
+}
 
 @Injectable({
     providedIn: 'root'
@@ -28,15 +30,18 @@ export interface AlbumDetails {
 export class AlbumsService {
     constructor(
          public http: HttpClient
-    ) { }
+    ) {}
 
-    showTables() {
+    showTables(){
         return this.http.get<Table[]>('/api/showtables');
     }
-    getAlbums(table: string) {
+    getAlbums(table: string){
         return this.http.get<Album[]>('/api/showrecords/' + table);
     }
     getAlbum(album: string, artist: string){
         return this.http.get<AlbumDetails>('/api/getalbum/' + album + '/' + artist);
+    }
+    getStats(table: string){
+        return this.http.get<Stats>('/api/getstats/' + table)
     }
 }

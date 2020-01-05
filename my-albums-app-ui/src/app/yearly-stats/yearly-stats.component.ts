@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlbumsService, Album } from '../albums.service';
+import { AlbumsService, Album, Stats} from '../albums.service';
+import { ChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-yearly-stats',
@@ -8,8 +9,14 @@ import { AlbumsService, Album } from '../albums.service';
   styleUrls: ['./yearly-stats.component.css']
 })
 export class YearlyStatsComponent implements OnInit {
+    stats: Stats;
     table: string;
     albums: Album[];
+    first_listened: Album;
+    last_listened: Album;
+    total_albums: number;
+    total_time: number;
+    top_artist: string;
 
   constructor(
       private albumService: AlbumsService,
