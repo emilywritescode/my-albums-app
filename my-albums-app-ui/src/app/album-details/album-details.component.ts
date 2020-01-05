@@ -20,7 +20,7 @@ export class AlbumDetailsComponent implements OnInit {
             this.artist = paramMap.get("artist");
             this.title = paramMap.get("title");
 
-            albumService.getAlbum(this.title, this.artist).subscribe(
+            albumService.getAlbumDetails(this.title, this.artist).subscribe(
                 data => {
                     this.details = data;
                 },

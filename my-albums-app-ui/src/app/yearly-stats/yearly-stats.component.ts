@@ -9,14 +9,9 @@ import { ChartsModule } from 'ng2-charts';
   styleUrls: ['./yearly-stats.component.css']
 })
 export class YearlyStatsComponent implements OnInit {
-    stats: Stats;
     table: string;
     albums: Album[];
-    first_listened: Album;
-    last_listened: Album;
-    total_albums: number;
-    total_time: number;
-    top_artist: string;
+    stats: Stats;
 
   constructor(
       private albumService: AlbumsService,
@@ -33,10 +28,17 @@ export class YearlyStatsComponent implements OnInit {
                 alert('Couldn\'t retrieve list of albums for stats.')
             }
           );
+
+          albumService.getStats(this.table).subscribe(
+            data => {
+                this.stats = data;
+            },
+            error => {
+                alert('Couldn\'t retrieve stats for albums table.')
+            }
+          );
       });
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

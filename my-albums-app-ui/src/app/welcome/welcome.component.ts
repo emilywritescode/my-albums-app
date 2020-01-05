@@ -17,7 +17,7 @@ export class WelcomeComponent implements OnInit {
         private route: ActivatedRoute,
     ) {
         route.paramMap.subscribe((paramMap) => {
-            albumService.showTables().subscribe(
+            albumService.getTables().subscribe(
                 data => {
                     this.tables = data;
                 },

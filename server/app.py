@@ -23,54 +23,54 @@ app.config['MYSQL_DATABASE_DB'] = config.mysqldb
 mysql.init_app(app)
 
 
-@app.route("/api/insertrecord", methods=['POST'])
-def insertRecord():
+@app.route('/api/insertalbum', methods=['POST'])
+def insertAlbum():
     req = request.get_json()
 
     _tab = config.latest_year
     _m = req['month']
     _d = req['day']
-    _t = req['album']
-    _a = req['artist']
-    _r = req['rel_year']
+    _a = req['album']
+    _r = req['artist']
+    _y = req['rel_year']
 
-    if _tab and _m and _d and _t and _a and _r:
+    if _tab and _m and _d and _a and _r and _y:
         conn = mysql.connect()
         cursor = conn.cursor()
         try:
             args = (_tab,
                     _m,
                     _d,
-                    _t,
                     _a,
-                    _r
+                    _r,
+                    _y
                     )
-            cursor.callproc('insertRecord', (args))
+            cursor.callproc('insertAlbum', (args))
         except Exception as e:
-            print(str(e))
+            print(f'mysql insertAlbum error: {str(e)}')
             return jsonify("Error with inserting into database.")
 
         conn.commit()
         conn.close()
-        return jsonify('Record for {} by {} successfully inserted into database'.format(_t, _a))
+        return jsonify(f'{_a} by {_r} successfully inserted into database')
 
     else:
         return jsonify("Some input fields were missing")
 
 
-@app.route('/api/showtables', methods=['GET'])
-def showTables():
+@app.route('/api/gettables', methods=['GET'])
+def getTables():
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.callproc('showTables',)
+        cursor.callproc('getTables',)
     except Exception as e:
-        return make_response(str(e), 404)
+        return make_response(f'mysql getTables error: {str(e)}', 404)
 
     data = cursor.fetchall()
 
     if len(data) == 0:
-        return make_response("not found", 404)
+        return make_response('error occurred when fetching tables', 404)
     else:
         conn.commit()
         res_dict = []
@@ -84,19 +84,19 @@ def showTables():
         return jsonify(res_dict)
 
 
-@app.route("/api/showrecords/<table>", methods=['GET'])
-def showRecords(table):
+@app.route('/api/getalbums/<table>', methods=['GET'])
+def getAlbums(table):
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.callproc('selectRecords', (table,))
+        cursor.callproc('getAlbums', (table,))
     except Exception as e:
-        return make_response(str(e), 404)
+        return make_response(f'mysql getAlbums error: {str(e)}', 404)
 
     data = cursor.fetchall()
 
     if len(data) == 0:
-        return make_response("not found", 404)
+        return make_response(f'error occurred when fetching albums for {table}', 404)
     else:
         conn.commit()
         res_dict = []
@@ -111,8 +111,28 @@ def showRecords(table):
             res_dict.append(row_dict)
         return jsonify(res_dict)
 
-@app.route("/api/getalbum/<path:album>/<path:artist>")
-def getAlbum(album, artist):
+
+@app.route('/api/get/getstats/<table>', methods=['GET'])
+def getStats(table):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    try:
+        cursor.callproc('getStats', (table,))
+    except Exception as e:
+        return make_response(f'mysql getStats error: {str(e)}', 404)
+
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        return make_response(f'error occurred when fetching stats for {table}', 404)
+    else:
+        conn.commit()
+        res_dict = []
+        return jsonify(res_dict)
+
+
+@app.route('/api/getalbumdetails/<path:album>/<path:artist>', methods=['GET'])
+def getAlbumDetails(album, artist):
     # try Spotify search
     sp_search_results = spotify_search_album(album, artist)
 
@@ -121,7 +141,7 @@ def getAlbum(album, artist):
         try:
             sp_search_results = spotify_search_album(album_slice(album), artist)
         except Exception as e:
-            return make_response("Error occured trying to query Spotify for album.", 404)
+            return make_response(f'Error occurred trying to query Spotify for {album}.', 404)
 
     # get album cover
     sp_album_cover = sp_search_results['albums']['items'][0]['images'][0]['url']
@@ -155,6 +175,7 @@ def spotify_search_album(album, artist):
 
     return res
 
+
 def lfm_search_album(album, artist):
     network = pylast.LastFMNetwork(api_key=config.LAST_FM_KEY, api_secret=config.LAST_FM_SECRET)
 
@@ -171,9 +192,11 @@ def lfm_search_album(album, artist):
 def album_slice(album):
     return album[:album.index('(')]
 
-@app.route("/api/getartist/<path:artist>", methods=['GET'])
+
+@app.route('/api/getartist/<path:artist>', methods=['GET'])
 def getArtist(artist):
     return get_artist(artist)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     app.run(debug=True, port=8080)
