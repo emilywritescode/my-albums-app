@@ -1,0 +1,15 @@
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">{{table}}</h1>
+    </div>
+</div>
+
+<div class="container" *ngIf="stats">
+    <p>first listened album  {{stats.First_Listened.Album}}</p>
+    <p>first listened artist  {{stats.First_Listened.Artist}}</p>
+    <p>last listened album  {{stats.Last_Listened.Album}}</p>
+    <p>last listened artist  {{stats.Last_Listened.Artist}}</p>
+    <p>top artist {{stats.Top_Artist}}</p>
+    <p>total albums listened  {{stats.Total_Albums}}</p>
+    <p>total time listened  {{stats.Total_Time}}</p>
+</div>

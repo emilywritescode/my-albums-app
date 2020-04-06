@@ -1,19 +1,19 @@
 <div class="jumbotron jumbotron-fluid text-center">
     <h1 class="title"><em>{{title}}</em></h1>
-    <h3 class="artist"><a routerLink="/artist/{{artist}}">{{artist}}</a></h3>
+    <h3 class="artist"><a *ngIf="artist != 'various artists'" routerLink="/artist/{{artist}}">{{artist}}</a></h3><p *ngIf="artist == 'various artists'">{{artist}}</p>
 
-    <div *ngFor="let x of details">
+    <div *ngIf="details">
         <!-- album cover art -->
-        <div class="text-center" *ngIf="x.CoverArt">
-            <img src="{{x.CoverArt}}" height="250" width="250">
+        <div class="text-center" *ngIf="details.CoverArt">
+            <img src="{{details.CoverArt}}" height="250" width="250">
         </div>
-        <hr *ngIf="x.LFM_Summary">
-        <div [innerHtml]= "x.LFM_Summary" class="text-center" *ngIf="x.LFM_Summary">
-            <p>{{x.LFM_Summary}}</p>
+        <hr *ngIf="details.LFM_Summary">
+        <div [innerHtml]= "details.LFM_Summary" class="text-center" *ngIf="details.LFM_Summary">
+            <p>{{details.LFM_Summary}}</p>
         </div>
         <!-- album Spotify playlist -->
-        <!-- <div *ngIf="x.SpotifyPlayer">
-            <iframe src={{x.SpotifyPlayer}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <!-- <div *ngIf="details.SpotifyPlayer">
+            <iframe src={{details.SpotifyPlayer}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         </div> -->
     </div>
 </div>

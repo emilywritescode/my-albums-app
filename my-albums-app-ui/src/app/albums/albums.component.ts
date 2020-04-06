@@ -23,7 +23,7 @@ export class AlbumsComponent implements OnInit {
                     this.albums = data;
                 },
                 error => {
-                    alert('Couldn\'t retrieve list of albums');
+                    alert('Couldn\'t retrieve list of albums for displaying.');
                 }
             );
         });

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +11,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { AlbumsComponent } from './albums/albums.component';
 import { AlbumDetailsComponent } from './album-details/album-details.component';
 import { ArtistDetailsComponent } from './artist-details/artist-details.component';
+import { InsertRecordComponent } from './insert-record/insert-record.component';
+import { YearlyStatsComponent } from './yearly-stats/yearly-stats.component';
 
 @NgModule({
   declarations: [
@@ -17,14 +20,17 @@ import { ArtistDetailsComponent } from './artist-details/artist-details.componen
     WelcomeComponent,
     AlbumsComponent,
     AlbumDetailsComponent,
-    ArtistDetailsComponent
+    ArtistDetailsComponent,
+    InsertRecordComponent,
+    YearlyStatsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
-    FormsModule
+    FormsModule,
+    ChartsModule
   ],
   providers: [HttpClient],
   bootstrap: [AppComponent]
