@@ -25,7 +25,7 @@ export class InsertRecordComponent implements OnInit {
               'Content-Type': 'application/json'
           })
       };
-      this.http.post('/api/insertrecord', JSON.stringify(this.record), httpOptions).subscribe(
+      this.http.post('/api/insertalbum', JSON.stringify(this.record), httpOptions).subscribe(
           data => {
               this.diag_msg = JSON.stringify(data);
           },

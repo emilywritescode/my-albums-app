@@ -16,13 +16,12 @@ def get_artist(artist):
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
-        print(f'Error with connecting to db: {e}')
+        print(f'Error with connecting to db: {str(e)}')
         return None
 
     data = cursor.callproc('searchArtist', [artist,])
     for result in cursor.stored_results():
         data = result.fetchall()
-        print(f'data: {data}')
     if(len(data) == 0):
         print(f'Artist not found in DB: {artist}')
         init_artist(artist)
@@ -31,7 +30,6 @@ def get_artist(artist):
         cursor.callproc('searchArtist', [artist,])
         for result in cursor.stored_results():
             data = result.fetchall()
-            print(f'after inserting {data}')
 
     ''' in MySQL db, artists:
     artist_name,
@@ -69,7 +67,7 @@ def init_artist(artist):
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
-        print(f'Error with connecting to db: {e}')
+        print(f'Error with connecting to db: {str(e)}')
         return None
 
     sp_artist_res = spotify_init_search_artist(artist)
@@ -86,7 +84,7 @@ def init_artist(artist):
         cursor.callproc('insertArtist', (args))
         print(f'Successfully init artist: {artist}')
     except Exception as e:
-        print(f'Something happened with attempting to insert {artist} into the DB: {e}')
+        print(f'error when attempting to insert {artist} into the DB: {str(e)}')
         return
 
     conn.commit()
@@ -98,14 +96,14 @@ def update_artist(artist, column, value):
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
-        print(f'Error with connecting to db: {e}')
+        print(f'Error with connecting to db: {str(e)}')
         return None
 
     try:
         cursor.callproc('updateArtist', (artist, column, value))
         print(f'Successfully updated {artist}. col: {column} with value: {value}')
     except Exception as e:
-        print(f'Something happened with attempting to update {artist}. col: {column} with value: {value} + {e}')
+        print(f'error when attempting to update {artist}. col: {column} with value: {value} + {str(e)}')
         return
 
     conn.commit()
@@ -123,7 +121,7 @@ def spotify_init_search_artist(artist):
     try:
         spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     except Exception as e:
-        print(f'spotipy init search for {artist} failed with exception: {e}')
+        print(f'spotipy init search for {artist} failed with exception: {str(e)}')
         return res
 
     res = {
@@ -139,7 +137,7 @@ def spotify_updated_search_artist(artist):
     try:
         spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
     except Exception as e:
-        print(f'spotipy search for {artist} failed with exception: {e}')
+        print(f'spotipy search for {artist} failed with exception: {str(e)}')
         return None
 
     res = {
@@ -169,7 +167,7 @@ def wikidata_search_artist(artist):
         wbs_j = wbsearch.json()
         wikidata_id = wbs_j['search'][0]['id']
     except Exception as e:
-        print(f'wikidata search for {artist} failed with exception: {e}')
+        print(f'wikidata search for {artist} failed with exception: {str(e)}')
         return res
 
     try:
@@ -182,7 +180,7 @@ def wikidata_search_artist(artist):
         })
         wbg_j = wbget.json()
     except Exception as e:
-        print(f'wikidata get failed with exception: {e}')
+        print(f'wikidata get failed with exception: {str(e)}')
         return res
 
     res = {
@@ -200,5 +198,5 @@ def grabWikiValue(j_results, wiki_key):
         res = j_results[wiki_key][0]['mainsnak']['datavalue']['value']
         return res
     except KeyError as e:
-        print(f'Error Key for: {e}')
+        print(f'Error Key for: {str(e)}')
         return None

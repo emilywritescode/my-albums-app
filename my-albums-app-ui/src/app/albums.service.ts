@@ -21,8 +21,9 @@ export interface AlbumDetails {
 export interface Stats {
     First_Listened: Album;
     Last_Listened: Album;
-    Total_Time: number;
     Top_Artist: string;
+    Total_Albums: number;
+    Total_Time: number;
 }
 
 @Injectable({
@@ -40,9 +41,10 @@ export class AlbumsService {
         return this.http.get<Album[]>('/api/getalbums/' + table);
     }
     getAlbumDetails(album: string, artist: string){
-        return this.http.get<AlbumDetails>('/api/getalbumdetails/' + album + '/' + artist);
+        var album_encoded = encodeURIComponent(album)
+        return this.http.get<AlbumDetails>('/api/getalbumdetails/' + album_encoded + '/' + artist);
     }
     getStats(table: string){
-        return this.http.get<Stats>('/api/getstats/' + table)
+        return this.http.get<Stats>('/api/getstats/' + table);
     }
 }
