@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails, LastFMDetails } from '../artist.service'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
-import { faInstagram, faTwitterSquare, faFacebook, faSpotify } from '@fortawesome/free-brands-svg-icons'
+import { faInstagram, faTwitterSquare, faFacebook, faSpotify, faLastfmSquare } from '@fortawesome/free-brands-svg-icons'
 
 @Component({
     selector: 'app-artist-details',
@@ -20,6 +20,7 @@ export class ArtistDetailsComponent implements OnInit {
     faTwitterSquare = faTwitterSquare;
     faFacebook = faFacebook;
     faSpotify = faSpotify;
+    faLastfmSquare = faLastfmSquare;
 
     constructor(
         private artistService : ArtistService,
