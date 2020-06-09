@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 import requests
+import config
 
 from flask import jsonify
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-import config
 
 import mysql.connector
 
 
 def get_artist(artist):
-    try: #connecting to DB
+    try:  # connecting to DB
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
@@ -63,7 +63,7 @@ def get_artist(artist):
 
 
 def init_artist(artist):
-    try: #connecting to DB
+    try:  # connecting to DB
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
@@ -73,7 +73,7 @@ def init_artist(artist):
     sp_artist_res = spotify_init_search_artist(artist)
     wiki_artist_res = wikidata_search_artist(artist)
 
-    try: #calling DB stored proc for inserting artist
+    try:  # calling DB stored proc for inserting artist
         args = (artist,
                 wiki_artist_res['official'],
                 wiki_artist_res['tw'],
@@ -92,7 +92,7 @@ def init_artist(artist):
 
 
 def update_artist(artist, column, value):
-    try: #connecting to DB
+    try:  # connecting to DB
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
