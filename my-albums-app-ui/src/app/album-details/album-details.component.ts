@@ -25,7 +25,7 @@ export class AlbumDetailsComponent implements OnInit {
                     this.details = data;
                 },
                 error => {
-                    alert('Couldn\'t retrieve album');
+                    alert('Couldn\'t retrieve album: ' + error.error);
                 }
             );
         });

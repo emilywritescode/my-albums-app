@@ -104,10 +104,9 @@ def getAlbums(table, api_call=True):
 @app.route('/api/getstats/<table>', methods=['GET'])
 def getStats(table):
     if table == config.latest_year:
-        return None
+        return make_response(f'Invalid year', 404)
 
     year = int(table.split('albums_')[1])
-    print(year)
 
     try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
@@ -152,16 +151,16 @@ def getStats(table):
         'Year': stats[0],
         'First_Listened_Album': stats[1].split(','),
         'First_Listened_Artist': stats[2].split(','),
-        'First_Listened_Month': stats[3],
+        'First_Listened_Month': calendar.month_name[stats[3]],
         'First_Listened_Day': stats[4],
         'Last_Listened_Album': stats[5].split(','),
         'Last_Listened_Artist': stats[6].split(','),
-        'Last_Listened_Month': stats[7],
+        'Last_Listened_Month': calendar.month_name[stats[7]],
         'Last_Listened_Day': stats[8],
         'Top_Artist': stats[9].split(','),
         'Top_Num': stats[10],
         'Total_Albums': stats[11],
-        'Total_Time': stats[12]
+        'Total_Time': convertMilliseconds(stats[12])
     }
 
     print(res_dict)
@@ -222,6 +221,25 @@ def getYearlyTimeListened(table):
 
     print(f'Total of {time} milliseconds')
     return time
+
+
+def convertMilliseconds(milliseconds):
+    time_string = []
+
+    if milliseconds / 86400000 >= 1:  # days
+        time_string.append(str(milliseconds // 86400000) + ' days')
+        milliseconds = milliseconds % 86400000
+    if milliseconds / 3600000 >= 1:  # hours
+        time_string.append(str(milliseconds // 3600000) + ' hours')
+        milliseconds = milliseconds % 3600000
+    if milliseconds / 60000 >= 1:  # minutes
+        time_string.append(str(milliseconds // 60000) + ' minutes')
+        milliseconds = milliseconds % 60000
+    if milliseconds / 1000 >= 1:  # seconds
+        time_string.append(str(milliseconds // 1000) + ' seconds')
+        milliseconds = milliseconds % 1000
+
+    return ' '.join(time_string)
 
 
 @app.route('/api/getartist/<path:artist>', methods=['GET'])

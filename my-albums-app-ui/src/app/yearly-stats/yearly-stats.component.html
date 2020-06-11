@@ -4,9 +4,12 @@
     </div>
 </div>
 
-<div class="container" *ngIf="stats">
-    <p>You listened to {{stats.Total_Albums}} albums in the year of {{stats.Year}} for a total of {{stats.Total_Time}} milliseconds!</p>
-    <p>First day you listened an album this year: {{stats.First_Listened_Album}} on {{stats.First_Listened_Month}} {{stats.First_Listened_Day}}</p>
-    <p>Last day you listened an album this year: {{stats.Last_Listened_Album}} on {{stats.Last_Listened_Month}} {{stats.Last_Listened_Day}}</p>
-    <p>Top artist: {{stats.Top_Artist}}</p>
+<div class="container" id="stats" *ngIf="stats">
+    <p>You listened to <span class="emphasize">{{stats.Total_Albums}} albums</span> in the year of {{stats.Year}}</p>
+    <p>Together, those albums run for a total of <span class="emphasize">{{stats.Total_Time}}</span></p>
+    <p>First album listen on {{stats.First_Listened_Month}} {{stats.First_Listened_Day}}</p>
+    <p>{{stats.First_Listened_Album}} {{stats.First_Listened_Artist}}</p>
+    <p>Last album listen on {{stats.Last_Listened_Month}} {{stats.Last_Listened_Day}}</p>
+    <p>{{stats.Last_Listened_Album}} {{stats.Last_Listened_Artist}}</p>
+    <p>Your top artist was {{stats.Top_Artist}} with {{stats.Top_Num}} albums listened</p>
 </div>

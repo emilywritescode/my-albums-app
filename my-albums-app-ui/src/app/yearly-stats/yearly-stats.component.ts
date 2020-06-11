@@ -26,7 +26,7 @@ export class YearlyStatsComponent implements OnInit {
                 this.albums = data;
             },
             error => {
-                alert('Couldn\'t retrieve list of albums for stats.')
+                alert('Couldn\'t retrieve list of albums for stats: ' + error.error);
             }
           );
 
@@ -35,7 +35,7 @@ export class YearlyStatsComponent implements OnInit {
                 this.stats = data;
             },
             error => {
-                alert('Couldn\'t retrieve stats for albums table.')
+                alert('Couldn\'t retrieve stats for albums table: ' + error.error);
             }
           );
       });
