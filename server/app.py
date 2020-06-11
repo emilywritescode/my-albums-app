@@ -31,18 +31,19 @@ def getAlbumDetails(album, artist, api_call=True):
 #  API: Fetch all tables from the database
 @app.route('/api/gettables', methods=['GET'])
 def getTables():
-    try:
+    try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
         print(f'Error with connecting to db: {str(e)}')
         return jsonify("Issue connecting to database")
 
-    try:
+    try:  # calling stored procedure
         data = cursor.callproc('getTables',)
     except Exception as e:
         return make_response(f'mysql getTables error: {str(e)}', 404)
 
+    data = []
     for result in cursor.stored_results():
         data = result.fetchall()
 
@@ -64,25 +65,25 @@ def getTables():
 #  API: Fetch year of albums from a table in the database
 @app.route('/api/getalbums/<table>', methods=['GET'])
 def getAlbums(table, api_call=True):
-    try:
+    try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
         print(f'Error with connecting to db: {str(e)}')
         return jsonify("Issue connecting to database")
 
-    try:
-        data = cursor.callproc('getAlbums', (table,))
+    try:  # calling stored procedure
+        cursor.callproc('getAlbums', (table,))
     except Exception as e:
         return make_response(f'mysql getAlbums error: {str(e)}', 404)
 
+    data = []
     for result in cursor.stored_results():
         data = result.fetchall()
 
     if len(data) == 0:
         return make_response(f'error occurred when fetching albums for {table}', 404)
     else:
-        conn.commit()
         res_dict = []
         for row in data:
             row_dict = {
@@ -102,70 +103,124 @@ def getAlbums(table, api_call=True):
 #  API: Get stats about a listen year from the database
 @app.route('/api/getstats/<table>', methods=['GET'])
 def getStats(table):
-    # check if year is not current year
-    # connect to DB
-    # try: get stats for year
-        # success : return
-        # failure: generate stats
     if table == config.latest_year:
         return None
 
-    try:
+    year = int(table.split('albums_')[1])
+    print(year)
+
+    try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
         print(f'Error with connecting to db: {str(e)}')
         return jsonify("Issue connecting to database")
 
-    try:
-        cursor.callproc('getStats', (table,))
+    try:  # calling stored procedure
+        cursor.callproc('getStats', (year,))
     except Exception as e:
         return make_response(f'mysql getStats error: {str(e)}', 404)
 
+    data = []
     for result in cursor.stored_results():
         data = result.fetchall()
 
-    if len(data) == 0:
-        return make_response(f'error occurred when fetching stats for {table}', 404)
-    else:
-        conn.commit()
-        print(data)
-        res_dict = {
-            'First_Listened' : albums.get_single_album(table, data[0][0], data[0][1]),
-            'Last_Listened' : albums.get_single_album(table, data[0][2], data[0][3]),
-            'Top_Artist' : data[0][4],
-            'Total_Albums' : data[0][4],
-            'Total_Time' : data[0][5]
-        }
-        print(res_dict)
-        return jsonify(res_dict)
+    if data[0][12] is None:
+        print('stats are not updated! trying again...')
+        update_stats(table, year)
+
+        try:  # calling stored procedure again
+            conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
+            cursor = conn.cursor(buffered=True)
+            cursor.callproc('getStats', (year,))
+        except Exception as e:
+            return make_response(f'mysql getStats error: {str(e)}', 404)
+
+        data = []
+        for result in cursor.stored_results():
+            data = result.fetchall()
+
+    ''' in MySQL db, stats:
+    year,
+    first listened: album, artist, month, day,
+    last listened: album, artist, month, day,
+    top artist, number of albums, total time in milliseconds
+    '''
+
+    stats = data[0]
+    res_dict = {
+        'Year': stats[0],
+        'First_Listened_Album': stats[1].split(','),
+        'First_Listened_Artist': stats[2].split(','),
+        'First_Listened_Month': stats[3],
+        'First_Listened_Day': stats[4],
+        'Last_Listened_Album': stats[5].split(','),
+        'Last_Listened_Artist': stats[6].split(','),
+        'Last_Listened_Month': stats[7],
+        'Last_Listened_Day': stats[8],
+        'Top_Artist': stats[9].split(','),
+        'Top_Num': stats[10],
+        'Total_Albums': stats[11],
+        'Total_Time': stats[12]
+    }
+
+    print(res_dict)
+    return jsonify(res_dict)
+
+
+def update_stats(table, year):
+    milliseconds = getYearlyTimeListened(table)
+
+    try:  # connecting to MySQL database
+        conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
+        cursor = conn.cursor(buffered=True)
+    except Exception as e:
+        print(f'Error with connecting to db: {str(e)}')
+        return jsonify("Issue connecting to database")
+
+    try:  # calling stored procedure
+        args = (year, milliseconds)
+        print(args)
+
+        cursor.callproc('updateStats', args)
+        print(f'updated stats for {year} successfully')
+    except Exception as e:
+        print(f'Error with updating stats for {year}: {str(e)}')
+
+    conn.commit()
+    conn.close()
 
 
 #  Calculate total duration in milliseconds of all albums in listen year
 def getYearlyTimeListened(table):
     time = 0
-    albums = getAlbums(table, api_call=False)
-    for album in albums:
+
+    table_albums = getAlbums(table, api_call=False)
+
+    for album in table_albums:
         title = album['Album']
         artist = album['Artist']
         print(f'{title}, {artist}')
         sp_search = albums.spotify_search_album(title, artist)
         if sp_search['albums']['total'] == 0:
-            # splice album title and try Spotify search again
-            try:
+            try:  # splice album title and try Spotify search again
                 sp_search = albums.spotify_search_album(album_slice(title), artist)
             except Exception as e:
                 print(f'failure to splice search for {title}')
                 continue
+
         try:
             sp_album_id = sp_search['albums']['items'][0]['id']
         except Exception as e1:
             print(f'failure to spotify search for {title}')
             continue
-        tracks = spotify_get_album_tracks(sp_album_id)
+
+        tracks = albums.spotify_get_album_tracks(sp_album_id)
+
         for track in tracks:
             time += track['duration_ms']
-    print(time)
+
+    print(f'Total of {time} milliseconds')
     return time
 
 

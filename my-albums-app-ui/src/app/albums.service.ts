@@ -19,9 +19,17 @@ export interface AlbumDetails {
     Summary: string;
 }
 export interface Stats {
-    First_Listened: Album;
-    Last_Listened: Album;
-    Top_Artist: string;
+    Year: number;
+    First_Listened_Album: Album[];
+    First_Listened_Artist: string[];
+    First_Listened_Month: number;
+    First_Listened_Day: number;
+    Last_Listened_Album: Album[];
+    Last_Listened_Artist: string[];
+    Last_Listened_Month: number;
+    Last_Listened_Day: number;
+    Top_Artist: string[];
+    Top_Num: number[];
     Total_Albums: number;
     Total_Time: number;
 }

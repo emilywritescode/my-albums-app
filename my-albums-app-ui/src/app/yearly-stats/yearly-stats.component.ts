@@ -12,6 +12,7 @@ export class YearlyStatsComponent implements OnInit {
     table: string;
     albums: Album[];
     stats: Stats;
+    total_time: string;
 
   constructor(
       private albumService: AlbumsService,

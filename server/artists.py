@@ -12,21 +12,29 @@ import mysql.connector
 
 
 def get_artist(artist):
-    try:  # connecting to DB
+    try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
         print(f'Error with connecting to db: {str(e)}')
         return None
 
-    data = cursor.callproc('searchArtist', [artist,])
+    try:  # calling stored procedure
+        cursor.callproc('searchArtist', [artist,])
+    except Exception as e:
+        return make_response(f'mysql getArtist error: {str(e)}', 404)
+
+    data = []
     for result in cursor.stored_results():
         data = result.fetchall()
+
     if(len(data) == 0):
-        print(f'Artist not found in DB: {artist}')
+        print(f'Artist not found in DB: {artist}, initializing now')
         init_artist(artist)
+
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
+
         cursor.callproc('searchArtist', [artist,])
         for result in cursor.stored_results():
             data = result.fetchall()
@@ -63,7 +71,7 @@ def get_artist(artist):
 
 
 def init_artist(artist):
-    try:  # connecting to DB
+    try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
@@ -92,14 +100,14 @@ def init_artist(artist):
 
 
 def update_artist(artist, column, value):
-    try:  # connecting to DB
+    try:  # connecting to MySQL database
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb, charset='utf8mb4', collation='utf8mb4_general_ci', use_unicode=True)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
         print(f'Error with connecting to db: {str(e)}')
         return None
 
-    try:
+    try:  # calling stored procedure
         cursor.callproc('updateArtist', (artist, column, value))
         print(f'Successfully updated {artist}. col: {column} with value: {value}')
     except Exception as e:
