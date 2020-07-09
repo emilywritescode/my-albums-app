@@ -31,7 +31,7 @@ export class InsertRecordComponent implements OnInit {
           },
           (error: HttpErrorResponse)=> {
               if(error.status != 200){
-                  this.diag_msg = "Error inserting into database.";
+                  this.diag_msg = "Error inserting into database: " + error.error;
               }
           }
       );

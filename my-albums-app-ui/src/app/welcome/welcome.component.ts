@@ -22,7 +22,7 @@ export class WelcomeComponent implements OnInit {
                     this.tables = data;
                 },
                 error => {
-                    alert('Couldn\'t retrieve database tables');
+                    alert('Couldn\'t retrieve database tables: ' + error.error);
                 }
             );
         });

@@ -37,7 +37,7 @@ export class ArtistDetailsComponent implements OnInit {
                     this.lastfm = this.details.LastFM;
                 },
                 error => {
-                    alert ('Couldn\'t retrieve artist')
+                    alert ('Couldn\'t retrieve artist: ' + error.error)
                 }
             );
         });
