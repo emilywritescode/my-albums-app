@@ -30,8 +30,6 @@ def insert_album(req):
     _y = req['rel_year']
 
     if _tab and _m and _d and _a and _r and _y:
-        conn = mysql.connect()
-        cursor = conn.cursor()
         try:
             args = (_tab,
                     _m,

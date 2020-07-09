@@ -1,15 +1,21 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">{{table}} Stats</h1>
+        <h1 class="display-4">{{table}} stats</h1>
+        <hr>
+        <p class="lead">
+            <span>{{stats.Total_Albums}} albums <br> {{stats.Total_Time}}</span>
+        </p>
     </div>
 </div>
 
-<div class="container" id="stats" *ngIf="stats">
-    <p>You listened to <span class="emphasize">{{stats.Total_Albums}} albums</span> in the year of {{stats.Year}}</p>
-    <p>Together, those albums run for a total of <span class="emphasize">{{stats.Total_Time}}</span></p>
-    <p>First album listen on {{stats.First_Listened_Month}} {{stats.First_Listened_Day}}</p>
-    <p>{{stats.First_Listened_Album}} {{stats.First_Listened_Artist}}</p>
-    <p>Last album listen on {{stats.Last_Listened_Month}} {{stats.Last_Listened_Day}}</p>
-    <p>{{stats.Last_Listened_Album}} {{stats.Last_Listened_Artist}}</p>
-    <p>Your top artist was {{stats.Top_Artist}} with {{stats.Top_Num}} albums listened</p>
+<div class="container text-center" id="stats" *ngIf="stats">
+    <div><span class="emphasize">First</span> album listen on <span class="emphasize">{{stats.First_Listened_Month}} {{stats.First_Listened_Day}}</span></div>
+
+    <div>{{stats.First_Listened_Album}} {{stats.First_Listened_Artist}}</div>
+
+    <div><span class="emphasize">Last</span> album listen on <span class="emphasize">{{stats.Last_Listened_Month}} {{stats.Last_Listened_Day}}</span></div>
+
+    <div>{{stats.Last_Listened_Album}} {{stats.Last_Listened_Artist}}</div>
+
+    <div><span class="emphasize">Top artist</span> {{stats.Top_Artist}} with <span class="emphasize">{{stats.Top_Num}}</span> albums listened</div>
 </div>
