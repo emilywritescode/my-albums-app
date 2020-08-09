@@ -35,7 +35,7 @@ const routes: Routes = [
         component: ArtistDetailsComponent
     },
     {
-        path: "stats/:year",
+        path: "stats/:table",
         pathMatch: 'full',
         component: YearlyStatsComponent
     }

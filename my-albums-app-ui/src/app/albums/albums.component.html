@@ -1,7 +1,8 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
         <h1 class="display-4">{{table}}</h1>
-        <p class="lead">Here are all the albums you listened to this year!</p>
+        <p class="lead">Here are all the albums I listened to this year!</p>
+        <a *ngIf="valid_stats_year" routerLink="/stats/{{table}}" id="stats-link">[stats]</a>
     </div>
 </div>
 

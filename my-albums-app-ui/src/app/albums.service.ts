@@ -16,20 +16,22 @@ export interface Table {
 export interface AlbumDetails {
     CoverArt: string;
     SpotifyPlayer: string;
-    Summary: string;
+    LFM_Summary: string;
 }
 export interface Stats {
-    Year: number;
-    First_Listened_Album: Album[];
+    Table_Year: number;
+    First_Listened_Album: string[];
     First_Listened_Artist: string[];
+    First_Listened_Cover: string[];
     First_Listened_Month: string;
     First_Listened_Day: number;
-    Last_Listened_Album: Album[];
+    Last_Listened_Album: string[];
     Last_Listened_Artist: string[];
+    Last_Listened_Cover: string[];
     Last_Listened_Month: string;
     Last_Listened_Day: number;
     Top_Artist: string[];
-    Top_Num: number[];
+    Top_Num: number;
     Total_Albums: number;
     Total_Time: string;
 }

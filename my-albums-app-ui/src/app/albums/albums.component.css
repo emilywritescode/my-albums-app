@@ -14,3 +14,13 @@
     background-position: -100%;
     color: var(--accent-color);
 }
+
+#stats-link{
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+#stats-link:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}

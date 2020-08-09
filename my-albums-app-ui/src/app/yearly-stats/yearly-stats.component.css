@@ -1,15 +1,18 @@
-.lead span{
-    color: var(--main-color);
-    font-style: italic;
-    font-size: 0.8em;
+.col-lg {
+    background-color: var(--jumbo2-color);
+    border: 3px solid;
+    border-color: var(--accent-color);
+    padding: 20px;
+    padding-bottom: 0px;
+    margin: 20px;
 }
 
-#stats {
-    font-size: 1.1em;
+.first-last{
+    margin: 0px;
+    text-align: center;
 }
 
-.emphasize {
-    font-size: 1.2em;
-    font-weight: 600;
-    color: var(--main-color);
+ul{
+    list-style: none;
+    padding-left: 0;
 }

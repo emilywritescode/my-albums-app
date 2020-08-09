@@ -10,6 +10,8 @@ import { AlbumsService, Album } from '../albums.service';
 export class AlbumsComponent implements OnInit {
     table: string;
     albums: Album[];
+    valid_stats_years: string[] = ['albums_2018', 'albums_2019']
+    valid_stats_year: boolean;
 
     constructor(
         private albumService: AlbumsService,
@@ -27,6 +29,8 @@ export class AlbumsComponent implements OnInit {
                 }
             );
         });
+
+       this.valid_stats_year = this.valid_stats_years.includes(this.table);
     }
     ngOnInit() {}
 }

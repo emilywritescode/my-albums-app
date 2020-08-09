@@ -103,7 +103,7 @@ def getAlbums(table, api_call=True):
 #  API: Get stats about a listen year from the database
 @app.route('/api/getstats/<table>', methods=['GET'])
 def getStats(table):
-    if table == config.latest_year:
+    if table not in config.valid_table_years:
         return make_response(f'Invalid year', 404)
 
     year = int(table.split('albums_')[1])
@@ -143,21 +143,37 @@ def getStats(table):
     year,
     first listened: album, artist, month, day,
     last listened: album, artist, month, day,
-    top artist, number of albums, total time in milliseconds
+    top artist, number of albums, total time in days, hours, minutes, seconds (starting with highest possible)
     '''
 
     stats = data[0]
+
+    first_listened_album = [x.strip() for x in stats[1].split(',')]
+    first_listened_artist = [x.strip() for x in stats[2].split(',')]
+    first_listened_cover = []
+    for i in range(len(first_listened_album)):
+        first_listened_cover.append(albums.get_album_details(first_listened_album[i], first_listened_artist[i], False)['CoverArt'])
+
+
+    last_listened_album = [x.strip() for x in stats[5].split(',')]
+    last_listened_artist = [x.strip() for x in stats[6].split(',')]
+    last_listened_cover = []
+    for i in range(len(last_listened_album)):
+        last_listened_cover.append(albums.get_album_details(last_listened_album[i], last_listened_artist[i], False)['CoverArt'])
+
     res_dict = {
-        'Year': stats[0],
-        'First_Listened_Album': stats[1].split(','),
-        'First_Listened_Artist': stats[2].split(','),
+        'Table_Year': stats[0],
+        'First_Listened_Album': first_listened_album,
+        'First_Listened_Artist': first_listened_artist,
+        'First_Listened_Cover': first_listened_cover,
         'First_Listened_Month': calendar.month_name[stats[3]],
         'First_Listened_Day': stats[4],
-        'Last_Listened_Album': stats[5].split(','),
-        'Last_Listened_Artist': stats[6].split(','),
+        'Last_Listened_Album': last_listened_album,
+        'Last_Listened_Artist': last_listened_artist,
+        'Last_Listened_Cover': last_listened_cover,
         'Last_Listened_Month': calendar.month_name[stats[7]],
         'Last_Listened_Day': stats[8],
-        'Top_Artist': stats[9].split(','),
+        'Top_Artist': [x.strip() for x in stats[9].split(',')],
         'Top_Num': stats[10],
         'Total_Albums': stats[11],
         'Total_Time': convertMilliseconds(stats[12])
@@ -238,7 +254,6 @@ def convertMilliseconds(milliseconds):
     if milliseconds / 1000 >= 1:  # seconds
         time_string.append(str(milliseconds // 1000) + ' seconds')
         milliseconds = milliseconds % 1000
-
     return ' '.join(time_string)
 
 

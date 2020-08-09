@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlbumsService, Album, Stats} from '../albums.service';
+import { AlbumsService, AlbumDetails, Stats} from '../albums.service';
 import { ChartsModule } from 'ng2-charts';
 
 @Component({
@@ -10,25 +10,14 @@ import { ChartsModule } from 'ng2-charts';
 })
 export class YearlyStatsComponent implements OnInit {
     table: string;
-    albums: Album[];
     stats: Stats;
-    total_time: string;
 
   constructor(
       private albumService: AlbumsService,
       private route: ActivatedRoute
   ) {
       route.paramMap.subscribe((paramMap) => {
-          this.table = paramMap.get('year');
-
-          albumService.getAlbums(this.table).subscribe(
-            data => {
-                this.albums = data;
-            },
-            error => {
-                alert('Couldn\'t retrieve list of albums for stats: ' + error.error);
-            }
-          );
+          this.table = paramMap.get('table');
 
           albumService.getStats(this.table).subscribe(
             data => {
@@ -39,6 +28,7 @@ export class YearlyStatsComponent implements OnInit {
             }
           );
       });
+      console.log(this);
   }
 
   ngOnInit() {}
