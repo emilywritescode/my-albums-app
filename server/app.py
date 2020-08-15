@@ -104,7 +104,7 @@ def getAlbums(table, api_call=True):
 @app.route('/api/getstats/<table>', methods=['GET'])
 def getStats(table):
     if table not in config.valid_table_years:
-        return make_response(f'Invalid year', 404)
+        return make_response('Invalid year', 404)
 
     year = int(table.split('albums_')[1])
 
@@ -112,7 +112,7 @@ def getStats(table):
         conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
         cursor = conn.cursor(buffered=True)
     except Exception as e:
-        print(f'Error with connecting to db: {str(e)}')
+        print(f'Error with connecting to db: {str(e)}', 404)
         return jsonify("Issue connecting to database")
 
     try:  # calling stored procedure
@@ -123,87 +123,69 @@ def getStats(table):
     data = []
     for result in cursor.stored_results():
         data = result.fetchall()
+        print(data)
 
-    if data[0][12] is None:
-        print('stats are not updated! trying again...')
-        update_stats(table, year)
+    if data[0][14] is None:  # time listened
+        print('time listened in stats are not updated! printing out for manual updating')
+        print(getYearlyTimeListened(table))
+        return make_response('need to update stats...', 404)
 
-        try:  # calling stored procedure again
-            conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
-            cursor = conn.cursor(buffered=True)
-            cursor.callproc('getStats', (year,))
-        except Exception as e:
-            return make_response(f'mysql getStats error: {str(e)}', 404)
+    if data[0][5] is None or data[0][10] is None:  #  album covers
+        print('covers in stats are not updated! printing out for manual updating...')
+        first_listened_album = [x.strip() for x in data[0][1].split(',')]
+        first_listened_artist = [x.strip() for x in data[0][2].split(',')]
+        last_listened_album = [x.strip() for x in data[0][6].split(',')]
+        last_listened_artist = [x.strip() for x in data[0][7].split(',')]
+        get_covers_for_stats(first_listened_album, first_listened_artist, last_listened_album, last_listened_artist)
+        return make_response('need to update stats...', 404)
 
-        data = []
-        for result in cursor.stored_results():
-            data = result.fetchall()
 
     ''' in MySQL db, stats:
     year,
-    first listened: album, artist, month, day,
-    last listened: album, artist, month, day,
+    first listened: album, artist, month, day, cover_image
+    last listened: album, artist, month, day, cover_image
     top artist, number of albums, total time in days, hours, minutes, seconds (starting with highest possible)
     '''
 
     stats = data[0]
 
-    first_listened_album = [x.strip() for x in stats[1].split(',')]
-    first_listened_artist = [x.strip() for x in stats[2].split(',')]
-    first_listened_cover = []
-    for i in range(len(first_listened_album)):
-        first_listened_cover.append(albums.get_album_details(first_listened_album[i], first_listened_artist[i], False)['CoverArt'])
-
-
-    last_listened_album = [x.strip() for x in stats[5].split(',')]
-    last_listened_artist = [x.strip() for x in stats[6].split(',')]
-    last_listened_cover = []
-    for i in range(len(last_listened_album)):
-        last_listened_cover.append(albums.get_album_details(last_listened_album[i], last_listened_artist[i], False)['CoverArt'])
-
     res_dict = {
         'Table_Year': stats[0],
-        'First_Listened_Album': first_listened_album,
-        'First_Listened_Artist': first_listened_artist,
-        'First_Listened_Cover': first_listened_cover,
+        'First_Listened_Album': [x.strip() for x in stats[1].split(',')],
+        'First_Listened_Artist': [x.strip() for x in stats[2].split(',')],
         'First_Listened_Month': calendar.month_name[stats[3]],
         'First_Listened_Day': stats[4],
-        'Last_Listened_Album': last_listened_album,
-        'Last_Listened_Artist': last_listened_artist,
-        'Last_Listened_Cover': last_listened_cover,
-        'Last_Listened_Month': calendar.month_name[stats[7]],
-        'Last_Listened_Day': stats[8],
-        'Top_Artist': [x.strip() for x in stats[9].split(',')],
-        'Top_Num': stats[10],
-        'Total_Albums': stats[11],
-        'Total_Time': convertMilliseconds(stats[12])
+        'First_Listened_Cover': [x.strip() for x in stats[5].split(',')],
+        'Last_Listened_Album': [x.strip() for x in stats[6].split(',')],
+        'Last_Listened_Artist': [x.strip() for x in stats[7].split(',')],
+        'Last_Listened_Month': calendar.month_name[stats[8]],
+        'Last_Listened_Day': stats[9],
+        'Last_Listened_Cover': [x.strip() for x in stats[10].split(',')],
+        'Top_Artist': [x.strip() for x in stats[11].split(',')],
+        'Top_Num': stats[12],
+        'Total_Albums': stats[13],
+        'Total_Time': convertMilliseconds(stats[14])
     }
 
     print(res_dict)
     return jsonify(res_dict)
 
 
-def update_stats(table, year):
-    milliseconds = getYearlyTimeListened(table)
+def get_covers_for_stats(first_listened_album, first_listened_artist, last_listened_album, last_listened_artist):
 
-    try:  # connecting to MySQL database
-        conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
-        cursor = conn.cursor(buffered=True)
-    except Exception as e:
-        print(f'Error with connecting to db: {str(e)}')
-        return jsonify("Issue connecting to database")
+    first_listened_cover = []
+    for i in range(len(first_listened_album)):
+        first_listened_cover.append(albums.get_album_details(first_listened_album[i],  first_listened_artist[i], False)['CoverArt'])
 
-    try:  # calling stored procedure
-        args = (year, milliseconds)
-        print(args)
+    last_listened_cover = []
+    for i in range(len(last_listened_album)):
+        last_listened_cover.append(albums.get_album_details(last_listened_album[i], last_listened_artist[i], False)['CoverArt'])
 
-        cursor.callproc('updateStats', args)
-        print(f'updated stats for {year} successfully')
-    except Exception as e:
-        print(f'Error with updating stats for {year}: {str(e)}')
+    first_covers = ','.join(cover for cover in first_listened_cover)
+    last_covers = ','.join(cover for cover in last_listened_cover)
 
-    conn.commit()
-    conn.close()
+    print(first_covers)
+    print(last_covers)
 
 
 #  Calculate total duration in milliseconds of all albums in listen year
