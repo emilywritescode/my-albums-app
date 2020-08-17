@@ -1,7 +1,8 @@
-.artist {
+a {
+    color: var(--main-color);
     text-decoration: none;
 }
 
-a {
-    color: var(--main-color);
+.spotifyplayer {
+    margin-top: 30px;
 }

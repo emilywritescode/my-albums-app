@@ -1,24 +1,36 @@
 <div class="jumbotron text-center">
-    <h1 class="title"><em>{{title}}</em></h1>
-    <h3 class="artist"><a *ngIf="artist != 'various artists'" routerLink="/artist/{{artist}}">{{artist}}</a></h3><p *ngIf="artist == 'various artists'">{{artist}}</p>
+    <!-- album title -->
+    <h1 *ngIf="title"><em>{{title}}</em></h1>
 
+    <!-- artist name -->
+    <h4>
+        <p> <!-- link as long as artist isn't various artists -->
+            <a *ngIf="artist != 'various artists'" routerLink="/artist/{{artist}}">{{artist}}</a>
+        </p>
+        <!-- if artist is various artists, we don't want link -->
+        <p *ngIf="artist == 'various artists'">{{artist}}</p>
+    </h4>
+
+    <!-- cover art, summary from LastFM (if exists), and Spotify playlist (if exists) -->
     <div *ngIf="details">
         <!-- album cover art -->
         <div class="text-center" *ngIf="details.CoverArt">
-            <img src="{{details.CoverArt}}" height="250" width="250">
+            <img src="{{details.CoverArt}}" height="180" width="180">
         </div>
         <hr *ngIf="details.LFM_Summary">
         <div [innerHtml]= "details.LFM_Summary" class="text-center" *ngIf="details.LFM_Summary">
             <p>{{details.LFM_Summary}}</p>
         </div>
         <!-- album Spotify playlist -->
-        <!-- <div *ngIf="details.SpotifyPlayer">
-            <iframe src={{details.SpotifyPlayer}} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </div> -->
+        <div *ngIf="details.SpotifyPlayer">
+            <div class="spotifyplayer">
+                <iframe [src]="spotifyURL" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </div>
+        </div>
     </div>
 </div>
 
-<footer class="text-center">
+<footer class="text-center" *ngIf="details">
     <p *ngIf="details.CoverArt">
         Album cover retrieved from <a href="https://spotify.com">Spotify</a>.
         <br />

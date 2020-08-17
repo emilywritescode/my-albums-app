@@ -45,6 +45,17 @@ def get_artist(artist):
     sp_URI
     '''
 
+    if (data[0][5]) is None:
+        res = spotify_init_search_artist(artist)
+        update_artist(artist, 'sp_artist_uri', res['sp_artist_uri'])
+
+        conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
+        cursor = conn.cursor(buffered=True)
+
+        cursor.callproc('searchArtist', [artist,])
+        for result in cursor.stored_results():
+            data = result.fetchall()
+
     # Spotify data (not stored in DB)
     sp_data = spotify_updated_search_artist(artist)
 
@@ -53,8 +64,7 @@ def get_artist(artist):
 
     res_dict = {
         'Spotify' : {
-            'Artist_URI': data[0][5],
-            'Followers': sp_data['Followers'],
+            'Artist_Follow': "https://open.spotify.com/follow/1/?uri=spotify:artist:" + data[0][5],
             'Genres': sp_data['Genres'].split(','),
             'Image': sp_data['Image']
         },
@@ -92,7 +102,7 @@ def init_artist(artist):
                 wiki_artist_res['tw'],
                 wiki_artist_res['fb'],
                 wiki_artist_res['ig'],
-                sp_artist_res['Artist_URI']
+                sp_artist_res['sp_artist_uri']
                 )
         cursor.callproc('insertArtist', (args))
         print(f'Successfully init artist: {artist}')
@@ -127,9 +137,7 @@ def spotify_init_search_artist(artist):
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
 
-    res = {
-        'Artist_URI': None
-    }
+    res = {}
 
     try:
         spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
@@ -138,7 +146,7 @@ def spotify_init_search_artist(artist):
         return res
 
     res = {
-        'Artist_URI': spsearch['artists']['items'][0]['id']
+        'sp_artist_uri' : spsearch['artists']['items'][0]['id']
     }
     return res
 
@@ -155,7 +163,6 @@ def spotify_updated_search_artist(artist):
 
     res = {
         'Genres': ','.join(map(str, (spsearch['artists']['items'][0]['genres']))),
-        'Followers': spsearch['artists']['items'][0]['followers']['total'],
         'Image': spsearch['artists']['items'][0]['images'][0]['url']
     }
     return res

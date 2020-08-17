@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails, LastFMDetails } from '../artist.service'
 import { faLink, faHeadphonesAlt } from '@fortawesome/free-solid-svg-icons'
-import { faInstagram, faTwitterSquare, faFacebook, faSpotify, faLastfmSquare } from '@fortawesome/free-brands-svg-icons'
+import { faInstagram, faTwitterSquare, faFacebook, faLastfmSquare } from '@fortawesome/free-brands-svg-icons'
 
 @Component({
     selector: 'app-artist-details',
@@ -13,6 +14,7 @@ export class ArtistDetailsComponent implements OnInit {
     name: string;
     details: ArtistDetails;
     spotify: SpotifyDetails;
+    spotifyURL: SafeResourceUrl;
     wikidata: WikiDataDetails;
     lastfm: LastFMDetails;
     albums: string[];
@@ -20,13 +22,13 @@ export class ArtistDetailsComponent implements OnInit {
     faInstagram = faInstagram;
     faTwitterSquare = faTwitterSquare;
     faFacebook = faFacebook;
-    faSpotify = faSpotify;
     faLastfmSquare = faLastfmSquare;
     faHeadphonesAlt = faHeadphonesAlt;
 
     constructor(
         private artistService : ArtistService,
-        private route : ActivatedRoute
+        private route : ActivatedRoute,
+        private sanitizer: DomSanitizer
     ) {
         route.paramMap.subscribe((paramMap) => {
             this.name = paramMap.get("name");
@@ -38,6 +40,7 @@ export class ArtistDetailsComponent implements OnInit {
                     this.wikidata = this.details.WikiData;
                     this.lastfm = this.details.LastFM;
                     this.albums = this.details.albums;
+                    this.spotifyURL = sanitizer.bypassSecurityTrustResourceUrl(this.spotify.Artist_Follow);
                 },
                 error => {
                     alert ('Couldn\'t retrieve artist: ' + error.error)
