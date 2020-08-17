@@ -2,14 +2,26 @@ fa-icon {
     padding-right: 0.5em;
 }
 
-.genre-label{
-    padding: 3px;
+.genre-labels {
     display: inline-block;
-    position: relative;
+}
+
+.genre-label {
+    padding: 3px;
+    margin: 1px;
     background-color: var(--main-color);
     border-radius: 4px;
 }
 
-.jumbotron{
-    background-color: var(--jumbo2-color);
+.album-titles {
+    display: inline;
+}
+
+.album-title {
+    font-style: italic;
+    color: var(--link-color);
+}
+
+.artist-albums {
+    padding: 20px;
 }

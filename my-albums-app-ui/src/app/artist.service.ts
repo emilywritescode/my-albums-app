@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export interface SpotifyDetails {
-    Artist_URI: string;
-    Followers: number;
+    Artist_Follow: string;
     Genres: string[];
     Image: string
 }
@@ -20,6 +19,7 @@ export interface ArtistDetails {
     Spotify: SpotifyDetails;
     WikiData: WikiDataDetails;
     LastFM: LastFMDetails;
+    albums: string[];
 }
 
 @Injectable({

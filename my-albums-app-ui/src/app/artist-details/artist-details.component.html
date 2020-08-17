@@ -1,49 +1,87 @@
-<div class="jumbotron jumbotron-fluid text-center">
-    <h1>{{name}}</h1>
-
+<div class="jumbotron text-center">
     <div *ngIf="details"> <!--Make sure details are loaded-->
-        <div *ngIf="spotify">
-            <div *ngIf="spotify.Image">
-                <img height="180" width="180" src={{spotify.Image}}>
+        <div class="row">
+            <div class="col-lg-2"></div>
+
+            <div class="col-lg align-self-center">
+                <h1>{{name}}</h1>
+
+                <!-- Artist image (from Spotify) -->
+                <div *ngIf="spotify">
+                    <div *ngIf="spotify.Image">
+                        <img height="180" width="180" src={{spotify.Image}}>
+                    </div>
+                </div>
+
+                <!-- Social sites (from Wikidata, etc.) -->
+                <ul class="list-unstyled">
+                    <li>
+                        <div *ngIf="wikidata.OfficialSite">
+                            <fa-icon [icon]="faLink"></fa-icon><a href={{wikidata.OfficialSite}}>Official Site</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div *ngIf="wikidata.Facebook">
+                            <fa-icon [icon]="faFacebook"></fa-icon><a href="https://www.facebook.com/{{wikidata.Facebook}}">{{wikidata.Facebook}}</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div *ngIf="wikidata.Instagram">
+                            <fa-icon [icon]="faInstagram"></fa-icon><a href="https://www.instagram.com/{{wikidata.Instagram}}">{{wikidata.Instagram}}</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div *ngIf="wikidata.Twitter">
+                            <fa-icon [icon]="faTwitterSquare"></fa-icon><a href="https://www.twitter.com/{{wikidata.Twitter}}">{{wikidata.Twitter}}</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div *ngIf="lastfm.Artist_URL">
+                            <fa-icon [icon]="faLastfmSquare"></fa-icon><a href="https://www.last.fm/music/{{lastfm.Artist_URL}}">{{name}}</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Spotify followers and genres (from Spotify) -->
+                <div *ngIf="spotify.Artist_Follow" class="align-self-center">
+                    <iframe [src]="spotifyURL" width="160" height="25" scrolling="no" frameborder="0" style="border:none" allowtransparency="true"></iframe>
+                </div>
+
+                <div *ngIf="spotify.Genres">
+                    <div *ngFor="let genre of spotify.Genres" class="genre-labels">
+                        <span class="badge badge-info genre-label">{{genre}}</span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <ul class="list-unstyled">
-            <li>
-                <div *ngIf="wikidata.OfficialSite">
-                    <fa-icon [icon]="faLink"></fa-icon><a href={{wikidata.OfficialSite}}>Official Site</a>
+            <div class="col-lg align-self-center artist-albums">
+                <!-- Albums listened (from DB) -->
+                <div *ngIf="albums">
+                    <fa-icon [icon]="faHeadphonesAlt"></fa-icon>Albums listened
+                    <ul class="list-unstyled album-titles" *ngFor="let album of albums">
+                        <li>
+                            <a class="album-title" routerLink="/album/{{album}}/{{name}}">{{album}}</a>
+                        </li>
+                    </ul>
                 </div>
-            </li>
-            <li>
-                <div *ngIf="wikidata.Facebook">
-                    <fa-icon [icon]="faFacebook"></fa-icon><a href="https://www.facebook.com/{{wikidata.Facebook}}">{{wikidata.Facebook}}</a>
-                </div>
-            </li>
-            <li>
-                <div *ngIf="wikidata.Instagram">
-                    <fa-icon [icon]="faInstagram"></fa-icon><a href="https://www.instagram.com/{{wikidata.Instagram}}">{{wikidata.Instagram}}</a>
-                </div>
-            </li>
-            <li>
-                <div *ngIf="wikidata.Twitter">
-                    <fa-icon [icon]="faTwitterSquare"></fa-icon><a href="https://www.twitter.com/{{wikidata.Twitter}}">{{wikidata.Twitter}}</a>
-                </div>
-            </li>
-            <li>
-                <div *ngIf="lastfm.Artist_URL">
-                    <fa-icon [icon]="faLastfmSquare"></fa-icon><a href="https://www.last.fm/music/{{lastfm.Artist_URL}}">{{name}}</a>
-                </div>
-            </li>
-        </ul>
-        <div *ngIf="spotify.Followers">
-            <fa-icon [icon]="faSpotify"></fa-icon><a href="https://open.spotify.com/artist/{{spotify.Artist_URI}}">{{spotify.Followers|number}} followers</a>
-        </div>
-
-        <div *ngIf="spotify.Genres">
-            <div *ngFor="let genre of spotify.Genres">
-                <span class="badge badge-info genre-label">{{genre}}</span>
             </div>
-        </div>
 
+            <div class="col-lg-2"></div>
+        </div>
     </div>
 </div>
+
+
+
+<footer class="text-center">
+    <p *ngIf="spotify && spotify.Image">
+        Artist photo from <a href="https://spotify.com">Spotify</a>.
+        <br />
+        <img src="./assets/spotify-logo-green.png" width=100px/>
+    </p>
+    <p *ngIf="wikidata">
+        Using data from <a href="https://www.wikidata.org">Wikidata</a>.
+        <br />
+        <img src="./assets/wikidata-logo.png" width=100px/>
+    </p>
+</footer>
