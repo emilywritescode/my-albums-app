@@ -1,4 +1,4 @@
-<div class="jumbotron jumbotron-fluid text-center">
+<div class="jumbotron text-center">
     <h1 class="title"><em>{{title}}</em></h1>
     <h3 class="artist"><a *ngIf="artist != 'various artists'" routerLink="/artist/{{artist}}">{{artist}}</a></h3><p *ngIf="artist == 'various artists'">{{artist}}</p>
 
@@ -19,5 +19,14 @@
 </div>
 
 <footer class="text-center">
-    Album information sourced from <a href="https://last.fm">Last.fm</a>. User-contributed text is available under the Creative Commons By-SA License; additional terms may apply.
+    <p *ngIf="details.CoverArt">
+        Album cover retrieved from <a href="https://spotify.com">Spotify</a>.
+        <br />
+        <img src="./assets/spotify-logo-green.png" width=100px/>
+    </p>
+    <p *ngIf="details.LFM_Summary">
+        Album information sourced from <a href="https://last.fm">Last.fm</a>.
+        <br />
+        <img src="./assets/lastfm-logo.png" width=100px />
+    </p>
 </footer>

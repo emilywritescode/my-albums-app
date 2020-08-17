@@ -20,6 +20,7 @@ export interface ArtistDetails {
     Spotify: SpotifyDetails;
     WikiData: WikiDataDetails;
     LastFM: LastFMDetails;
+    albums: string[];
 }
 
 @Injectable({

@@ -2,7 +2,7 @@
 import requests
 import config
 
-from flask import jsonify
+from flask import jsonify, make_response
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -45,7 +45,11 @@ def get_artist(artist):
     sp_URI
     '''
 
+    # Spotify data (not stored in DB)
     sp_data = spotify_updated_search_artist(artist)
+
+    # Albums by this artist (not stored under artists table but technically "in the DB")
+    album_titles = get_artist_albums(artist)
 
     res_dict = {
         'Spotify' : {
@@ -62,7 +66,8 @@ def get_artist(artist):
         },
         'LastFM' : {
             'Artist_URL': artist.replace(' ', '+')
-        }
+        },
+        'albums' : album_titles
     }
 
     conn.close()
@@ -208,3 +213,24 @@ def grabWikiValue(j_results, wiki_key):
     except KeyError as e:
         print(f'Error Key for: {str(e)}')
         return None
+
+
+def get_artist_albums(artist):
+    try:  # connecting to MySQL database
+        conn = mysql.connector.connect(user=config.mysqluser, password=config.mysqlpass, host=config.mysqlhost, database=config.mysqldb)
+        cursor = conn.cursor(buffered=True)
+    except Exception as e:
+        print(f'Error with connecting to db: {str(e)}')
+        return None
+
+    try:  # calling stored procedure
+        cursor.callproc('getArtistAlbums', [artist,])
+    except Exception as e:
+        print(f'database search for {artist}\'s albums failed with exception: {str(e)}')
+        return None
+
+    data = []
+    for result in cursor.stored_results():
+        data = result.fetchall()
+
+    return [t[0] for t in data]
