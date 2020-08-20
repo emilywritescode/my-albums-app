@@ -85,16 +85,25 @@ def get_album_details(album, artist, api_call=True):
 
     if sp_search_results['albums']['total'] == 0:
         # splice album title and try Spotify search again
+        print('could not find album in Spotify, trying again...')
         try:
             sp_search_results = spotify_search_album(album_slice(album), artist)
         except Exception as e:
-            return make_response(f'Error occurred trying to query Spotify for {album}.', 404)
+            return make_response(f'Error occurred trying to query Spotify for {album}: {str(e)}.', 404)
+
+    print(sp_search_results)
+
+    # find the album -- some artists have singles with same name as album
+    for album_result in sp_search_results['albums']['items']:
+        if album_result['album_type'] == 'album':
+            sp_album = album_result
+            break
 
     # get album cover
-    sp_album_cover = sp_search_results['albums']['items'][0]['images'][0]['url']
+    sp_album_cover = album_result['images'][0]['url']
 
     #get album Spotify URL for play embed
-    sp_album_uri = sp_search_results['albums']['items'][0]['uri']
+    sp_album_uri = album_result['uri']
     sp_album_embed = "https://open.spotify.com/embed/album/" + sp_album_uri[sp_album_uri.rfind(':')+1:]
 
     # try Last.fm search
@@ -121,7 +130,7 @@ def spotify_search_album(album, artist):
     album_dec = urllib.parse.unquote(album)
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
-    res = sp.search(q = 'album:' + album_dec + ' artist:' + artist, limit=1, type = 'album', market = 'US')
+    res = sp.search(q = 'album:' + album_dec + ' artist:' + artist, type = 'album', market = 'US')
 
     return res
 
