@@ -7,10 +7,10 @@ fa-icon {
 }
 
 .genre-label {
-    padding: 3px;
+    padding: 5px;
     margin: 1px;
     background-color: var(--main-color);
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
 .album-titles {
