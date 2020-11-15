@@ -91,8 +91,6 @@ def get_album_details(album, artist, api_call=True):
         except Exception as e:
             return make_response(f'Error occurred trying to query Spotify for {album}: {str(e)}.', 404)
 
-    print(sp_search_results)
-
     # find the album -- some artists have singles with same name as album
     for album_result in sp_search_results['albums']['items']:
         if album_result['album_type'] == 'album':
@@ -118,7 +116,6 @@ def get_album_details(album, artist, api_call=True):
         'LFM_Summary': lfm_summary,
         #'WP_Summary': wp_summary
     }
-    print(res_dict)
     if(api_call):
         return jsonify(res_dict)
     else:

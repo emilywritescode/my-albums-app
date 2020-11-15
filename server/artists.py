@@ -81,7 +81,6 @@ def get_artist(artist):
     }
 
     conn.close()
-    print(res_dict)
     return jsonify(res_dict)
 
 
