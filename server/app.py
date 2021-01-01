@@ -75,6 +75,7 @@ def getAlbums(table, api_call=True):
     try:  # calling stored procedure
         cursor.callproc('getAlbums', (table,))
     except Exception as e:
+        print(f'mysql getAlbums error: {str(e)}')
         return make_response(f'mysql getAlbums error: {str(e)}', 404)
 
     data = []
@@ -82,6 +83,7 @@ def getAlbums(table, api_call=True):
         data = result.fetchall()
 
     if len(data) == 0:
+        print(f'error occurred when fetching albums for {table}, length of data retrieved was 0')
         return make_response(f'error occurred when fetching albums for {table}', 404)
     else:
         res_dict = []
@@ -125,10 +127,16 @@ def getStats(table):
         data = result.fetchall()
         print(data)
 
+    if not len(data):  # stats not yet in database
+        print('must be a new year! you need to update the database...')
+        print('getting the time listened for this year to help you out!')
+        getYearlyTimeListened(table)
+        return make_response('must be a new year! you need to update the database...', 404)
+
     if data[0][14] is None:  # time listened
         print('time listened in stats are not updated! printing out for manual updating')
-        print(getYearlyTimeListened(table))
-        return make_response('need to update stats...', 404)
+        getYearlyTimeListened(table)
+        return make_response('need to update stats with time listened...', 404)
 
     if data[0][5] is None or data[0][10] is None:  #  album covers
         print('covers in stats are not updated! printing out for manual updating...')
@@ -137,7 +145,7 @@ def getStats(table):
         last_listened_album = [x.strip() for x in data[0][6].split(',')]
         last_listened_artist = [x.strip() for x in data[0][7].split(',')]
         get_covers_for_stats(first_listened_album, first_listened_artist, last_listened_album, last_listened_artist)
-        return make_response('need to update stats...', 404)
+        return make_response('need to update stats with covers...', 404)
 
 
     ''' in MySQL db, stats:
@@ -184,7 +192,10 @@ def get_covers_for_stats(first_listened_album, first_listened_artist, last_liste
     first_covers = ','.join(cover for cover in first_listened_cover)
     last_covers = ','.join(cover for cover in last_listened_cover)
 
+    print('first listened cover(s)')
     print(first_covers)
+    print('\n')
+    print('last listened cover(s)')
     print(last_covers)
 
 
