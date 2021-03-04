@@ -180,7 +180,6 @@ def getStats(table):
 
 
 def get_covers_for_stats(first_listened_album, first_listened_artist, last_listened_album, last_listened_artist):
-
     first_listened_cover = []
     for i in range(len(first_listened_album)):
         first_listened_cover.append(albums.get_album_details(first_listened_album[i],  first_listened_artist[i], False)['CoverArt'])

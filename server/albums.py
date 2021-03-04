@@ -83,13 +83,20 @@ def get_album_details(album, artist, api_call=True):
     # try Spotify search
     sp_search_results = spotify_search_album(album, artist)
 
+    if not sp_search_results:  # error finding album from Spotify
+        print('album not found in Spotify!')
+        return make_response('album not found in Spotify!', 404)
+
     if sp_search_results['albums']['total'] == 0:
-        # splice album title and try Spotify search again
-        print('could not find album in Spotify, trying again...')
-        try:
-            sp_search_results = spotify_search_album(album_slice(album), artist)
-        except Exception as e:
-            return make_response(f'Error occurred trying to query Spotify for {album}: {str(e)}.', 404)
+        if '(' in album:  # splice album title and try Spotify search again
+            print('could not find album in Spotify, trying again...')
+            try:
+                sp_search_results = spotify_search_album(album_slice(album), artist)
+            except Exception as e:
+                return make_response(f'An error occurred trying to query Spotify for {album}: {str(e)}.', 404)
+        else:
+            print('album not found in Spotify!')
+            return make_response('album not found in Spotify!', 404)
 
     # find the album -- some artists have singles with same name as album
     for album_result in sp_search_results['albums']['items']:
@@ -116,7 +123,8 @@ def get_album_details(album, artist, api_call=True):
         'LFM_Summary': lfm_summary,
         #'WP_Summary': wp_summary
     }
-    if(api_call):
+
+    if api_call:
         return jsonify(res_dict)
     else:
         return res_dict
@@ -127,7 +135,12 @@ def spotify_search_album(album, artist):
     album_dec = urllib.parse.unquote(album)
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
-    res = sp.search(q = 'album:' + album_dec + ' artist:' + artist, type = 'album', market = 'US')
+
+    try:
+        res = sp.search(q = 'album:' + album_dec + ' artist:' + artist, type = 'album', market = 'US')
+    except Exception as e:
+        print(str(e))
+        return None
 
     return res
 
