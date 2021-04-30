@@ -1,22 +1,20 @@
 # my-albums-app
 
 ## The project
-MyAlbumsApp (an unoriginal name for the project that has now stuck) is a web application that displays details about all of the albums I've listened to over the years. I started keeping track of full albums that I listened to in 2018, using a MySQL database to store album titles, artist names, album release years, and the month and day I listened to an album.
+MyAlbumsApp (an unoriginal name for the project that has now stuck) is a web application that displays details about all of the albums I've listened to over the years. In 2018, I started keeping track of full albums that I listened to each year, using a MySQL database to store album titles, artist names, album release years, and the month and day I listened to an album.
 
 Eventually I decided I wanted to create a web app to display this information. I was familiar with how to make an Angular/Flask/MySQL web app from a class I took, where a semester-long project was to build a web app with this stack, so I decided to apply that knowledge to my own personal project. I also wanted to explore using different APIs to gather more information about the music I was listening to.
 
-So, MyAlbumsApp is a web application, using Angular for frontend, Python/Flask for the backend, and connecting to my MySQL database that stores a lot of information. I make use of the Spotify, Wikidata, and LastFM APIs to gather more information about albums and artists. You can read below for more about my development process for this project.
+MyAlbumsApp is a web application using Angular for frontend, Python/Flask for the backend, and connecting to my MySQL database that stores a lot of information. I make use of the Spotify, Wikidata, and LastFM APIs to gather more information about albums and artists. You can read below for more about my development process for this project.
 
 After that, there are some screenshots of MyAlbumsApp! As of now, the web app is not publicly hosted. That may come in the future, but it's not a top priority at the moment. Drop me a message if you are interested in seeing more.
 
 ## About the music
-I consider an "album" as anything on Spotify (my music streaming service of choice) that has 3 or more tracks. Deluxe, expanded, complete, super deluxe, awesome mega super duper bonus extended! versions of an album are considered as a separate album (for example, Selena Gomez's *Rare* and then *Rare (Deluxe)*, which I listened to in January 2020 and April 2020, respectively, are 2 different album listings in my database and the app).
+I consider an "album" as anything on Spotify (my music streaming service of choice) that has 3 or more tracks. Deluxe, expanded, complete, etc. versions of an album are considered as a separate album (for example, Selena Gomez's *Rare* and then *Rare (Deluxe)*, which I listened to in January 2020 and April 2020, respectively, are 2 different album listings in my database and the app).
 
 I do not count playlists or podcasts, strictly music albums.
 
-Since the app displays the date listened, this usually means I make myself listen to the entire album before it goes into the database. There's been plenty of midnight listens, where the accuracy of 'Date Listened' is kinda iffy, but that's okay.
-
-I generally consider the type of music I listen to as pop. Kpop is pretty big for me. I also have listened to quite a few soundtracks from period dramas!
+Since the app displays the date listened, this usually means I make myself listen to the entire album before it goes into the database. There's been plenty of midnight listens, where the accuracy of 'Date Listened' is kinda iffy.
 
 ## Development process
 - January 2019 - March 2019: Originally this was a barebones Flask app connecting to a MySQL database. A few HTML pages. The beginnings of using APIs to display more data about albums.
