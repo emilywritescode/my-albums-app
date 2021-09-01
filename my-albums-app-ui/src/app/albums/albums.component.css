@@ -6,13 +6,10 @@
 }
 .album-title, .album-artist{
     color: var(--link-color);
-    background-image: linear-gradient(to right, transparent 50%, var(--link-color) 50%);
-    background-size: 200%;
-    transition: background-position 0.25s;
 }
 .album-title:hover, .album-artist:hover{
-    background-position: -100%;
     color: var(--accent-color);
+    text-decoration: underline var(--link-color);
 }
 
 #stats-link{

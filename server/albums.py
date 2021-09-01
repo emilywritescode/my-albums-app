@@ -112,7 +112,7 @@ def get_album_details(album, artist, api_call=True):
     sp_album_embed = "https://open.spotify.com/embed/album/" + sp_album_uri[sp_album_uri.rfind(':')+1:]
 
     # try Last.fm search
-    lfm_summary = lfm_search_album(album, artist)
+    lfm_summary, lfm_url = lfm_search_album(album, artist)
 
     # try Wikipedia search
    # wp_summary = wp_search_album(album, artist)
@@ -121,6 +121,7 @@ def get_album_details(album, artist, api_call=True):
         'CoverArt' : sp_album_cover,
         'SpotifyPlayer' : sp_album_embed,
         'LFM_Summary': lfm_summary,
+        'LFM_URL' : lfm_url
         #'WP_Summary': wp_summary
     }
 
@@ -160,12 +161,17 @@ def spotify_get_album_tracks(spotify_album_id):
 def lfm_search_album(album, artist):
     network = pylast.LastFMNetwork(api_key=config.LAST_FM_KEY, api_secret=config.LAST_FM_SECRET)
 
-    get_album = network.get_album(artist, album)
-    r = str(get_album.get_wiki_content())
-    if r.rfind("<a href") == -1:
-        return None
+    lastfm_album = network.get_album(artist, album)
+
+    lastfm_wiki = str(lastfm_album.get_wiki_content())
+    if lastfm_wiki.rfind("<a href") == -1:
+        wiki = None
     else:
-        return r[:r.rfind("<a href")]
+        wiki = lastfm_wiki[:lastfm_wiki.rfind("<a href")]
+
+    url = lastfm_album.get_url()
+
+    return(wiki, url)
 
 # def wp_search_album(album, artist):
 #     pass

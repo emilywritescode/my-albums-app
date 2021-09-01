@@ -1,3 +1,7 @@
+fa-icon {
+    padding-right: 0.5em;
+}
+
 a {
     color: var(--main-color);
     text-decoration: none;

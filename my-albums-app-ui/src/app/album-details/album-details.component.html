@@ -13,7 +13,7 @@
                 <p *ngIf="artist == 'various artists'">{{artist}}</p>
             </h4>
 
-            <!-- cover art, summary from LastFM (if exists), and Spotify playlist (if exists) -->
+            <!-- cover art,summary from LastFM (if exists), LastFM URL (if exists), and Spotify playlist (if exists) -->
             <div *ngIf="details">
                 <!-- album cover art -->
                 <div class="text-center" *ngIf="details.CoverArt">
@@ -22,6 +22,10 @@
                 <hr *ngIf="details.LFM_Summary">
                 <div [innerHtml]= "details.LFM_Summary" class="text-center" *ngIf="details.LFM_Summary">
                     <p>{{details.LFM_Summary}}</p>
+                </div>
+                <div *ngIf="details.LFM_URL">
+                    <br />
+                    <fa-icon [icon]="faLastfmSquare"></fa-icon><a href="{{details.LFM_URL}}">Album on LastFM</a>
                 </div>
             </div>
         </div>
