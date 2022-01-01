@@ -25,7 +25,7 @@ CREATE table albums\_[year] like [pick any of the other albums\_ tables];
 - [ ] top_num
 - [ ] num_albums
 
-*need to run server, and grab results from console*:
+*FIRST, do the server upgrade steps below... THEN navigate to stats page for the desired year, and grab results from console*:
 - [ ] first_listened_image (if needed, list separated by commas)
 - [ ] last_listened_image (if needed, list separated by commas)
 - [ ] total_time_ms
