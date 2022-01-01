@@ -17,6 +17,7 @@ export interface AlbumDetails {
     CoverArt: string;
     SpotifyPlayer: string;
     LFM_Summary: string;
+    LFM_URL: string;
 }
 export interface Stats {
     Table_Year: number;

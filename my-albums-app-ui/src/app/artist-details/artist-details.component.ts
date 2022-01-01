@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails, LastFMDetails } from '../artist.service'
-import { faLink, faHeadphonesAlt } from '@fortawesome/free-solid-svg-icons'
-import { faInstagram, faTwitterSquare, faFacebook, faLastfmSquare } from '@fortawesome/free-brands-svg-icons'
+import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails, LastFMDetails } from '../artist.service';
+import { faLink, faHeadphonesAlt } from '@fortawesome/free-solid-svg-icons';
+import { faInstagram, faTwitterSquare, faFacebook, faLastfmSquare } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
     selector: 'app-artist-details',

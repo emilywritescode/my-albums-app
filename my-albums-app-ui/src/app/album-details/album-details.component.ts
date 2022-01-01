@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AlbumsService, AlbumDetails } from '../albums.service';
+import { faLastfmSquare } from '@fortawesome/free-brands-svg-icons';
+
 
 @Component({
     selector: 'app-album-details',
@@ -12,7 +14,8 @@ export class AlbumDetailsComponent implements OnInit {
     artist: string;
     title: string;
     details: AlbumDetails;
-    spotifyURL: SafeResourceUrl
+    spotifyURL: SafeResourceUrl;
+    faLastfmSquare = faLastfmSquare;
 
     constructor(
         private albumService: AlbumsService,
