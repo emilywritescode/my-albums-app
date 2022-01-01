@@ -25,14 +25,15 @@ CREATE table albums\_[year] like [pick any of the other albums\_ tables];
 - [ ] top_num
 - [ ] num_albums
 
-*FIRST, do the server upgrade steps below... THEN navigate to stats page for the desired year, and grab results from console*:
+*FIRST, do the server upgrade steps below... THEN navigate to stats page for the desired year, and grab results from console. The check for the total time listened is first, so that value needs to be in the DB before the server returns the cover images.*:
+- [ ] total_time_ms
 - [ ] first_listened_image (if needed, list separated by commas)
 - [ ] last_listened_image (if needed, list separated by commas)
-- [ ] total_time_ms
+
 
 **UI side**
-- [ ] albums.component: add table name to valid_stats_years
-- [ ] insert-record.component: increase max release year
+- [ ] albums.component.ts: add table name to valid_stats_years
+- [ ] insert-record.component.html: increase max release year
 
 **Server side**
 - [ ] config: 
