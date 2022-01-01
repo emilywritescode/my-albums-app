@@ -125,7 +125,6 @@ def getStats(table):
     data = []
     for result in cursor.stored_results():
         data = result.fetchall()
-        print(data)
 
     if not len(data):  # stats not yet in database
         print('must be a new year! you need to update the database...')
@@ -175,7 +174,6 @@ def getStats(table):
         'Total_Time': convertMilliseconds(stats[14])
     }
 
-    print(res_dict)
     return jsonify(res_dict)
 
 

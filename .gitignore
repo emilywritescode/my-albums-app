@@ -1,4 +1,5 @@
 server/__pycache__/*
 server/__init__.py
 server/config.py
+server/.cache
 .DS_Store
