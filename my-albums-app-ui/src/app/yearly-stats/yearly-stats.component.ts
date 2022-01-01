@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlbumsService, AlbumDetails, Stats} from '../albums.service';
-import { ChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-yearly-stats',
