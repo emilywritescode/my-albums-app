@@ -5,12 +5,10 @@ name = "pypi"
 
 [packages]
 requests = "*"
-pylast = "*"
+pylast = "==4.2.1"  #this version allows get_wiki_content (for album) to work
 spotipy = "*"
 flask = "*"
 mysql-connector-python = "*"
-
-[dev-packages]
 
 [requires]
 python_version = "3.8"
