@@ -57,7 +57,7 @@ def get_artist(artist):
             data = result.fetchall()
 
     # Spotify data (not stored in DB)
-    sp_data = spotify_updated_search_artist(artist)
+    sp_data = spotify_updated_search_artist(artist, data[0][5])
 
     # Albums by this artist (not stored under artists table but technically "in the DB")
     album_titles = get_artist_albums(artist)
@@ -150,19 +150,19 @@ def spotify_init_search_artist(artist):
     return res
 
 
-def spotify_updated_search_artist(artist):
+def spotify_updated_search_artist(artist, artist_uri):
     client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID, client_secret=config.SPOTIFY_CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
 
     try:
-        spsearch = sp.search(q = 'artist:' + artist, limit=1, type = 'artist')
+        spsearch = sp.artist(artist_uri)
     except Exception as e:
         print(f'spotipy search for {artist} failed with exception: {str(e)}')
         return None
 
     res = {
-        'Genres': ','.join(map(str, (spsearch['artists']['items'][0]['genres']))),
-        'Image': spsearch['artists']['items'][0]['images'][0]['url']
+        'Genres': ','.join(map(str, (spsearch['genres']))),
+        'Image': spsearch['images'][0]['url']
     }
     return res
 
