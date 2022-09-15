@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export interface SpotifyDetails {
-    Artist_Follow: string;
+    Artist_URI: string;
     Genres: string[];
     Image: string
 }

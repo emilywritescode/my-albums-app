@@ -42,9 +42,9 @@
                     </li>
                 </ul>
 
-                <!-- Spotify followers and genres (from Spotify) -->
-                <div *ngIf="spotify.Artist_Follow" class="align-self-center">
-                    <iframe [src]="spotifyURL" width="160" height="25" scrolling="no" frameborder="0" style="border:none" allowtransparency="true"></iframe>
+                <!-- Spotify URL + genres -->
+                <div *ngIf="spotify.Artist_URI" class="align-self-center">
+                    <fa-icon [icon]="faSpotify"></fa-icon><a href="https://open.spotify.com/artist/{{spotify.Artist_URI}}">{{name}}</a>
                 </div>
 
                 <div *ngIf="spotify.Genres">
@@ -75,7 +75,7 @@
 
 <footer class="text-center">
     <p *ngIf="spotify && spotify.Image">
-        Artist photo from <a href="https://spotify.com">Spotify</a>.
+        Artist photo and genres from <a href="https://spotify.com">Spotify</a>.
         <br />
         <img src="./assets/spotify-logo-green.png" width=100px/>
     </p>

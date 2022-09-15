@@ -42,10 +42,10 @@ def get_artist(artist):
     ''' in MySQL db, artists:
     artist_name,
     official (website), twitter, facebook, instagram,
-    sp_URI
+    sp_artist_uri
     '''
 
-    if (data[0][5]) is None:
+    if (data[0][5]) is None:  # spotify URI doesn't exist
         res = spotify_init_search_artist(artist)
         update_artist(artist, 'sp_artist_uri', res['sp_artist_uri'])
 
@@ -64,7 +64,7 @@ def get_artist(artist):
 
     res_dict = {
         'Spotify' : {
-            'Artist_Follow': "https://open.spotify.com/follow/1/?uri=spotify:artist:" + data[0][5],
+            'Artist_URI': data[0][5],
             'Genres': sp_data['Genres'].split(','),
             'Image': sp_data['Image']
         },
