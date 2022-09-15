@@ -8,7 +8,6 @@ export interface SpotifyDetails {
 }
 export interface WikiDataDetails {
     OfficialSite: string;
-    Facebook: string;
     Instagram: string;
     Twitter: string;
 }
