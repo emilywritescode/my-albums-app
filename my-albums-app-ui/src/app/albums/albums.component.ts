@@ -10,7 +10,7 @@ import { AlbumsService, Album } from '../albums.service';
 export class AlbumsComponent implements OnInit {
     table: string;
     albums: Album[];
-    valid_stats_years: string[] = ['albums_2018', 'albums_2019', 'albums_2020', 'albums_2021']
+    valid_stats_years: string[] = ['albums_2018', 'albums_2019', 'albums_2020', 'albums_2021', 'albums_2022']
     valid_stats_year: boolean;
 
     constructor(
