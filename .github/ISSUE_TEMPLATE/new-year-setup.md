@@ -7,8 +7,8 @@ assignees: emilywritescode
 
 ---
 
-[ ] **Create new table in database**
-CREATE table albums\_[year] like [pick any of the other albums\_ tables];
+**Create new table in database**
+- [ ] CREATE table albums\_[year] like [pick any of the other albums\_ tables];
 
 **Create row in stats table, set initial data**
 *can be found manually by looking at year's table*:
