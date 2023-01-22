@@ -1,7 +1,7 @@
-<div class="jumbotron text-center">
+<div class="jumbotron text-center mb-0">
     <div class="row">
-        <div class="col-lg-2"></div>
-        <div class="col-lg align-self-center">
+        <div class="col-lg"></div>
+        <div class="col-lg-5 mb-5 mx-5">
             <!-- album title -->
             <h1 *ngIf="title"><em>{{title}}</em></h1>
             <!-- artist name -->
@@ -29,27 +29,27 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg align-self-center">
+        <div class="col-lg-2">
             <!-- album Spotify playlist -->
             <div *ngIf="details.SpotifyPlayer">
-                <div class="spotifyplayer">
+                <div>
                     <iframe [src]="spotifyURL" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                 </div>
             </div>
         </div>
-        <div class="col-lg-2"></div>
+        <div class="col-lg"></div>
     </div>
 </div>
 
-<footer class="text-center" *ngIf="details">
-    <p *ngIf="details.CoverArt">
+<footer class="text-center py-2 align-self-center" *ngIf="details">
+    <div class="py-2" *ngIf="details.CoverArt">
         Album cover retrieved from <a href="https://spotify.com">Spotify</a>.
         <br />
-        <img src="./assets/spotify-logo-green.png" width=100px/>
-    </p>
-    <p *ngIf="details.LFM_Summary">
+        <img src="./assets/spotify-logo-green.png" height=30px />
+    </div>
+    <div class="py-2" *ngIf="details.LFM_Summary">
         Album information sourced from <a href="https://last.fm">Last.fm</a>.
         <br />
-        <img src="./assets/lastfm-logo.png" width=100px />
-    </p>
+        <img src="./assets/lastfm-logo.png" height=30px />
+    </div>
 </footer>
