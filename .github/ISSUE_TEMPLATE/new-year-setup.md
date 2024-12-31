@@ -25,7 +25,7 @@ assignees: emilywritescode
 - [ ] top_num
 - [ ] num_albums
 
-*FIRST, do the server upgrade steps below... THEN navigate to stats page for the desired year, and grab results from console. The check for the total time listened is first, so that value needs to be in the DB before the server returns the cover images.*:
+*FIRST, do the upgrade steps below... THEN navigate to stats page for the desired year, and grab result for the total time listened from terminal window console. The check for the total time listened is first, so that value needs to be in the DB before the server returns the cover images. Refresh the stats page, and grab the cover image links from the terminal window console, and update the DB again. Refresh one last time for the stats page to load!*
 - [ ] total_time_ms
 - [ ] first_listened_image (if needed, list separated by commas)
 - [ ] last_listened_image (if needed, list separated by commas)

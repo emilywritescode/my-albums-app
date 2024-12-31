@@ -141,5 +141,8 @@
             }
         }
     },
-    "defaultProject": "my-albums-app-ui"
+    "defaultProject": "my-albums-app-ui",
+    "cli": {
+      "analytics": false
+    }
 }
