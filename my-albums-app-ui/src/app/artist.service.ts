@@ -9,7 +9,6 @@ export interface SpotifyDetails {
 export interface WikiDataDetails {
     OfficialSite: string;
     Instagram: string;
-    Twitter: string;
 }
 export interface LastFMDetails {
     Artist_URL: string;

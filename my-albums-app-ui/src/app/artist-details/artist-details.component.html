@@ -26,11 +26,6 @@
                         </div>
                     </li>
                     <li>
-                        <div *ngIf="wikidata.Twitter">
-                            <fa-icon [icon]="faTwitterSquare"></fa-icon><a href="https://www.twitter.com/{{wikidata.Twitter}}">{{wikidata.Twitter}}</a>
-                        </div>
-                    </li>
-                    <li>
                         <div *ngIf="lastfm.Artist_URL">
                             <fa-icon [icon]="faLastfmSquare"></fa-icon><a href="https://www.last.fm/music/{{lastfm.Artist_URL}}">{{name}}</a>
                         </div>

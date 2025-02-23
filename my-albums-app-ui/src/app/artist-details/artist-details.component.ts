@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ArtistDetails, ArtistService, SpotifyDetails, WikiDataDetails, LastFMDetails } from '../artist.service';
 import { faLink, faHeadphonesAlt } from '@fortawesome/free-solid-svg-icons';
-import { faInstagram, faTwitterSquare, faLastfmSquare, faSpotify } from '@fortawesome/free-brands-svg-icons';
+import { faInstagram, faLastfmSquare, faSpotify } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
     selector: 'app-artist-details',
@@ -19,7 +19,6 @@ export class ArtistDetailsComponent implements OnInit {
     albums: string[];
     faLink = faLink;
     faInstagram = faInstagram;
-    faTwitterSquare = faTwitterSquare;
     faLastfmSquare = faLastfmSquare;
     faSpotify = faSpotify;
     faHeadphonesAlt = faHeadphonesAlt;

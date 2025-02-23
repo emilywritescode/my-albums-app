@@ -41,11 +41,11 @@ def get_artist(artist):
 
     ''' in MySQL db, artists:
     artist_name,
-    official (website), twitter, instagram,
+    official (website), instagram,
     sp_artist_uri
     '''
 
-    if (data[0][4]) is None:  # spotify URI doesn't exist
+    if (data[0][3]) is None:  # spotify URI doesn't exist
         res = spotify_init_search_artist(artist)
         update_artist(artist, 'sp_artist_uri', res['sp_artist_uri'])
 
@@ -57,21 +57,20 @@ def get_artist(artist):
             data = result.fetchall()
 
     # Spotify data (not stored in DB)
-    sp_data = spotify_updated_search_artist(artist, data[0][4])
+    sp_data = spotify_updated_search_artist(artist, data[0][3])
 
     # Albums by this artist (not stored under artists table but technically "in the DB")
     album_titles = get_artist_albums(artist)
 
     res_dict = {
         'Spotify' : {
-            'Artist_URI': data[0][4],
+            'Artist_URI': data[0][3],
             'Genres': sp_data['Genres'].split(','),
             'Image': sp_data['Image']
         },
         'WikiData' : {
             'OfficialSite': data[0][1],
-            'Instagram' : data[0][3],
-            'Twitter' : data[0][2],
+            'Instagram' : data[0][2]
         },
         'LastFM' : {
             'Artist_URL': artist.replace(' ', '+')
@@ -97,7 +96,6 @@ def init_artist(artist):
     try:  # calling DB stored proc for inserting artist
         args = (artist,
                 wiki_artist_res['official'],
-                wiki_artist_res['tw'],
                 wiki_artist_res['ig'],
                 sp_artist_res['sp_artist_uri']
                 )
@@ -169,7 +167,6 @@ def wikidata_search_artist(artist):
     res = {
         'official' : None,
         'ig' : None,
-        'tw' : None,
     }
     try:
         wbsearch = requests.get('https://www.wikidata.org/w/api.php', params =
@@ -201,8 +198,7 @@ def wikidata_search_artist(artist):
 
     res = {
         'official' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P856'),
-        'ig' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2003'),
-        'tw' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2002')
+        'ig' : grabWikiValue(wbg_j['entities'][wikidata_id]['claims'], 'P2003')
     }
 
     return res
