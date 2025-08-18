@@ -15,7 +15,7 @@
     <div class="row">
     <div class="col"></div>
     <div class="col">
-        <form #albumForm="ngForm" (ngSubmit)="insertAlbum()" >
+        <form ngNativeValidate (ngSubmit)="insertAlbum()" >
             <!-- Return message from submit function -->
             <div *ngIf="diag_msg" class="alert alert-warning alert-dismissible fade show" role="alert">
               <strong>{{diag_msg}}</strong>
@@ -55,7 +55,7 @@
             <div class="form-group row">
                 <label for="relyear" class="col-form-label">Release Year</label>
                 <div class="col-sm">
-                    <input type="number" min="1950" max="2025" class="form-control" id="relyear" name="relyear" [(ngModel)]="record.rel_year">
+                    <input type="number" min="1950" max="2025" class="form-control" id="relyear" required name="relyear" [(ngModel)]="record.rel_year">
                 </div>
             </div>
             <!-- Submit and clear buttons -->
