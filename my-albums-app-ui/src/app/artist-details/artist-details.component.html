@@ -50,7 +50,7 @@
                     <fa-icon [icon]="faHeadphonesAlt"></fa-icon>Albums listened
                     <ul class="list-unstyled album-titles" *ngFor="let album of albums">
                         <li>
-                            <a class="album-title" routerLink="/album/{{album}}/{{name}}">{{album}}</a>
+                            <a class="album-title" [routerLink]="['/album', album, name]">{{album}}</a>
                         </li>
                     </ul>
                 </div>

@@ -7,7 +7,7 @@
             <!-- artist name -->
             <h4>
                 <p> <!-- link as long as artist isn't various artists -->
-                    <a *ngIf="artist != 'various artists'" routerLink="/artist/{{artist}}">{{artist}}</a>
+                    <a *ngIf="artist != 'various artists'" [routerLink]="['/artist', artist]">{{artist}}</a>
                 </p>
                 <!-- if artist is various artists, we don't want link -->
                 <p *ngIf="artist == 'various artists'">{{artist}}</p>

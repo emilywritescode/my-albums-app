@@ -16,8 +16,8 @@
         </tr>
         <tr *ngFor="let album of albums">
             <td>{{ album.Month }} {{ album.Day }}</td>
-            <td><a routerLink="/album/{{album.Album}}/{{album.Artist}}" class="album-title">{{ album.Album }}</a></td>
-            <td><a *ngIf="album.Artist != 'various artists'" routerLink="/artist/{{album.Artist}}" class="album-artist">{{ album.Artist }}</a><div *ngIf="album.Artist == 'various artists'">{{album.Artist}}</div></td>
+            <td><a [routerLink]="['/album', album.Album, album.Artist]" class="album-title">{{ album.Album }}</a></td>
+            <td><a *ngIf="album.Artist != 'various artists'" [routerLink]="['/artist', album.Artist]" class="album-artist">{{ album.Artist }}</a><div *ngIf="album.Artist == 'various artists'">{{album.Artist}}</div></td>
             <td>{{ album.Release_Year }}</td>
         </tr>
     </table>
